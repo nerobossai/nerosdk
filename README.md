@@ -21,7 +21,7 @@
 - **Node.js 21+**
 - **npm**
 
-### Setup Using the Starter (Recommended)
+### Setup Using the Starter
 ```bash
 git clone https://github.com/nerobossai/nerosdk
 cd nerosdk
