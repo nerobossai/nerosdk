@@ -1,66 +1,27 @@
-# nerosdk
-An SDK to easily create and deploy AI agents.
+# Nero SDK
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/b23f7ec8-a89f-4ad1-9f75-4f24d91249cf" alt="Eliza Banner" width="100%" />
+</div>
 
-## Overview
-The `nerosdk` is designed to revolutionize the development and deployment of AI agents, particularly Autonomous Crypto Agents (ACAs). It leverages decentralized infrastructure, distributed computing, and blockchain-based governance to ensure scalability, transparency, and trust. By integrating open-source large language models (LLMs) and decentralized GPU networks, `nerosdk` empowers developers to create agents that operate efficiently and autonomously in decentralized ecosystems.
+## ⚡ Features
+1. **Tweet to Create Agent**: Quickly create agents via a simple tweet.
+2. **Tweet to Receive NFT Support**: Integrate NFT functionality effortlessly.
+3. **Full-Featured Twitter Connectors**: Robust Twitter integration for agent interactions.
+4. **Support for GPT4-o1**: Leverage the latest AI advancements with GPT4-o1 support.
+5. **Highly Extensible**: Create custom actions and clients tailored to your needs.
+6. **Just Works!**: Built to work out of the box.
 
-Key Features:
-- **Distributed Compute Networks**: Removes single points of failure, providing fault tolerance and censorship resistance.
-- **Open Governance**: Uses Decentralized Autonomous Organizations (DAOs) for transparent, community-driven decision-making.
-- **Enhanced On-Chain Capabilities**: Enables autonomous financial interactions and real-time market engagement.
-- **Verifiable Inference**: Integrates zero-knowledge proofs for verifiable and auditable agent outputs.
+## 🎯 Use Cases
+- 🤖 **Chatbots**: Enhance user interactions with intelligent chatbots.
+- 🕵 **Autonomous Agents**: Deploy autonomous AI agents for various applications.
+- 📈 **Business Process Handling**: Streamline and automate complex business processes.
 
-## TODO
-- [ ] Create detailed documentation.
-- [ ] Implement configuration-based setup for `nerosdk`.
-- [ ] Integrate Retrieval-Augmented Generation (RAG).
-- [ ] Develop plugins for Telegram and Discord bots.
-- [ ] Enable agents with wallets for autonomous transactions.
-- [ ] Write comprehensive test cases.
-- [ ] Create Docker images for streamlined deployment.
+## 🚀 Quick Start
+### Prerequisites
+- **Node.js 21+**
+- **npm**
 
-## Key Innovations
-### Decentralized Architecture
-<img width="429" alt="Nerocity-Infra" src="https://github.com/user-attachments/assets/7764b8d6-e990-49fb-8add-a502b4adacf1" />
-
-The `nerosdk` adopts a decentralized infrastructure that distributes computational workloads across a global GPU network. This approach eliminates centralization risks such as single points of failure, censorship, and resource inequity.
-
-### Trust and Transparency
-- **Censorship Resistance**: Open-source, censorship-resistant LLMs ensure unfiltered agent expression.
-- **Verifiable Outputs**: Zero-knowledge proofs validate agent actions, enhancing accountability.
-
-### Community Governance
-The SDK integrates with DAOs, allowing stakeholders to:
-- Vote on agent behavior updates.
-- Decide on roadmap priorities.
-- Shape the development of AI capabilities.
-
-### Advanced Financial Integration
-Agents can autonomously interact with decentralized finance (DeFi) protocols to:
-- Create and manage liquidity pools.
-- Execute token trades.
-- Implement dynamic yield farming strategies.
-
-## Roadmap
-### Phase 1
-- Finalize system architecture and specifications.
-- Deploy alpha versions of governance contracts.
-
-### Phase 2
-- Integrate decentralized GPU networks for distributed inference.
-- Partner with existing ACAs for compatibility testing.
-
-### Phase 3
-- Collaborate with DAOs to refine governance processes.
-- Trial advanced features like model parameter tuning.
-
-### Phase 4
-- Optimize resource allocation and developer tools.
-- Expand partnerships with GPU providers and additional DAOs.
-
-## How to Start Locally
-To set up the `nerosdk` locally, follow these steps:
-
+### Setup Using the Starter (Recommended)
 ```bash
 git clone https://github.com/nerobossai/nerosdk
 cd nerosdk
