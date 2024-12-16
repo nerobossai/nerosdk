@@ -4,7 +4,7 @@ import { mentionsCounter } from "../utils/counter";
 import { mentionsqueue, replyqueue } from "../storage/queue";
 import { cacheClient } from "../storage/redis";
 import { chatCompletion } from "../services/gpt";
-import { getCacheKey, isOlderThanXHours, sendAirdropRequest } from "../utils";
+import { getCacheKey, isOlderThanXHours } from "../utils";
 import { twitterClient } from "../utils/twitter";
 import {
   getUserProfileByUserid,
@@ -83,11 +83,6 @@ export const verifyAndHandleAirdropMentions = async (data: TweetV2) => {
       console.log("QT not worthy enough");
       return;
     }
-
-    await sendAirdropRequest({
-      userId: data.author_id,
-      text: data.text,
-    });
 
     airdropMetadata.count += 1;
     if (airdropMetadata.count >= airdropMetadata.limit) {

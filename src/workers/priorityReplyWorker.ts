@@ -3,7 +3,7 @@ import { logger } from "../logger";
 import { priorityreplyqueue } from "../storage/queue";
 import { getImageFromUrl, getRandomFromArray } from "../utils";
 import { priorityCounter } from "../utils/counter";
-import { nerocityTwitterClient, twitterClient } from "../utils/twitter";
+import { twitterClient } from "../utils/twitter";
 
 const sendReply = async (tweetId: string, text: string, config: IReplyBody) => {
   try {
@@ -46,13 +46,7 @@ const sendReply = async (tweetId: string, text: string, config: IReplyBody) => {
       };
     }
 
-    let res;
-
-    if (config.isNerocity) {
-      res = await nerocityTwitterClient.v2.reply(text, tweetId);
-    } else {
-      res = await twitterClient.v2.reply(text, tweetId);
-    }
+    let res = await twitterClient.v2.reply(text, tweetId);
 
     // async req
     console.log(res);
