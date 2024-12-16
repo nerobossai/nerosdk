@@ -3,7 +3,7 @@ import { logger } from "../logger";
 import { replyqueue } from "../storage/queue";
 import { getImageFromUrl, getRandomFromArray } from "../utils";
 import { counter } from "../utils/counter";
-import { nerocityTwitterClient, twitterClient } from "../utils/twitter";
+import { twitterClient } from "../utils/twitter";
 
 const sendReply = async (tweetId: string, text: string, config: IReplyBody) => {
   try {
