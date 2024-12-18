@@ -33,5 +33,7 @@ npm start
 ## Contributing
 We welcome contributions to the `nerosdk` project! Whether it's improving documentation, fixing bugs, or developing new features, your input is valuable. Please submit pull requests or open issues in the GitHub repository.
 
+Check our contribution guidelines [here](https://github.com/nerobossai/nerosdk/blob/main/docs/CONTRIBUTING.md)
+
 ## Acknowledgments
 The development of `nerosdk` is inspired by the principles of decentralization and community-driven innovation outlined by Nero Labs. We extend our gratitude to the Nero community for their support and contributions.
