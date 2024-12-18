@@ -35,7 +35,8 @@ export const generateAndTweet = async (
     const handles =
       newsHandles && newsHandles.length > 0 ? newsHandles : [newsUsername];
 
-    // check if it's time to include latest news in the tweet or not
+    const shuffledHandles = [...handles].sort(() => 0.5 - Math.random());
+
     const newsCacheKey = getCacheKey(`lastnewstime`);
     let timestamp = await cacheClient.get(newsCacheKey);
     let gptResponse: ChatCompletion.Choice;
@@ -57,7 +58,8 @@ export const generateAndTweet = async (
       };
 
       let newsContent: string | null = null;
-      for (const handle of handles) {
+      // Try multiple random handles
+      for (const handle of shuffledHandles) {
         newsContent = await fetchTweetsFromHandle(handle);
         if (newsContent) break;
       }
@@ -82,7 +84,7 @@ export const generateAndTweet = async (
 
     gptResponse = await chatCompletion(prompt);
     const tweet = gptResponse.message.content || "hello world!";
-    // send tweet
+
     const res = await twitterClient.v2.tweet(tweet);
     await cacheClient.set(lastTweetTimeCache, Date.now().toString());
   } catch (err) {
