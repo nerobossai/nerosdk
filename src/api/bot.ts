@@ -41,6 +41,7 @@ export interface ITweetBody {
   uniqueid: string;
   prompt: [string];
   news_prompt: [string];
+  news_handles: [string];
   hotprofiles_prompt: string;
   replies_prompt: string;
   hotprofiles: [IHotProfileBody];

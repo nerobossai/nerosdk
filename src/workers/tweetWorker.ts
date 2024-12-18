@@ -4,11 +4,7 @@ import { logger } from "../logger";
 import { twtqueue } from "../storage/queue";
 import { tweetCounter } from "../utils/counter";
 import { twitterClient } from "../utils/twitter";
-import {
-  getCacheKey,
-  getRandomItem,
-  isOlderThanXHours,
-} from "../utils";
+import { getCacheKey, getRandomItem, isOlderThanXHours } from "../utils";
 import { cacheClient } from "../storage/redis";
 import { getUserProfileByUsername } from "./hotProfilesWorker";
 import { ChatCompletion } from "openai/resources";
@@ -17,10 +13,15 @@ const newsUsername = "XNews";
 
 const tweetHourCheckReset = 2.5;
 
-export const generateAndTweet = async (prompt: string, newsPrompt: string) => {
+export const generateAndTweet = async (
+  prompt: string,
+  newsPrompt: string,
+  newsHandles?: string[]
+) => {
   try {
     const lastTweetTimeCache = getCacheKey(`lasttweettime`);
     let lastTweetTimestamp = await cacheClient.get(lastTweetTimeCache);
+
     if (
       lastTweetTimestamp &&
       !isOlderThanXHours(parseInt(lastTweetTimestamp), tweetHourCheckReset)
@@ -31,29 +32,54 @@ export const generateAndTweet = async (prompt: string, newsPrompt: string) => {
       return;
     }
 
+    const handles =
+      newsHandles && newsHandles.length > 0 ? newsHandles : [newsUsername];
+
     // check if it's time to include latest news in the tweet or not
     const newsCacheKey = getCacheKey(`lastnewstime`);
     let timestamp = await cacheClient.get(newsCacheKey);
     let gptResponse: ChatCompletion.Choice;
+
     if (!timestamp || isOlderThanXHours(parseInt(timestamp), 3)) {
       console.log("---------NEWS TIME-----------");
-      const userProfile = await getUserProfileByUsername(newsUsername);
-      // fetch last post from MarioNawfal
-      const tweets = await twitterClient.v2.userTimeline(userProfile.id, {
-        max_results: 5,
-      });
-      const news = tweets?.data?.data[0];
+
+      const fetchTweetsFromHandle = async (handle: string) => {
+        try {
+          const userProfile = await getUserProfileByUsername(handle);
+          const tweets = await twitterClient.v2.userTimeline(userProfile.id, {
+            max_results: 5,
+          });
+          return tweets?.data?.data[0]?.text;
+        } catch (error) {
+          console.error(`Error fetching tweets from ${handle}:`, error);
+          return null;
+        }
+      };
+
+      let newsContent: string | null = null;
+      for (const handle of handles) {
+        newsContent = await fetchTweetsFromHandle(handle);
+        if (newsContent) break;
+      }
+
+      if (!newsContent) {
+        console.error("No news content found from any handles");
+        return;
+      }
+
       // compile tweet -> boom!
       gptResponse = await chatCompletion(newsPrompt, [
         {
-          content: news.text,
+          content: newsContent,
           role: "user",
         },
       ]);
+
       await cacheClient.set(newsCacheKey, Date.now().toString());
     } else {
       gptResponse = await chatCompletion(prompt);
     }
+
     gptResponse = await chatCompletion(prompt);
     const tweet = gptResponse.message.content || "hello world!";
     // send tweet
@@ -72,7 +98,8 @@ export const tweetWorker = async (data: ITweetBody) => {
 
   await generateAndTweet(
     getRandomItem(data.prompt),
-    getRandomItem(data.news_prompt)
+    getRandomItem(data.news_prompt),
+    data.news_handles
   );
 
   tweetCounter.decrementRemaining();
