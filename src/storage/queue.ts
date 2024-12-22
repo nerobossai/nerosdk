@@ -10,7 +10,6 @@ import { priorityReplyWorker } from "../workers/priorityReplyWorker";
 import {
   IHotProfileBody,
   IMentionBody,
-  INFTCollection,
   IReplyBody,
   ITweetBody,
 } from "../utils/interfaces";
@@ -48,6 +47,11 @@ export const nftcreationqueue: queue<IMentionBody> = fastq.promise(
 );
 
 export const tokenswapqueue: queue<IMentionBody> = fastq.promise(
+  tokenSwapWorker,
+  1
+);
+
+export const tokenlendqueue: queue<IMentionBody> = fastq.promise(
   tokenSwapWorker,
   1
 );

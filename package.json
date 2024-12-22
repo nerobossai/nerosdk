@@ -33,7 +33,7 @@
     "morgan": "^1.10.0",
     "openai": "^4.68.4",
     "redis": "^4.6.4",
-    "solana-agent-kit": "^1.1.0",
+    "solana-agent-kit": "^1.2.0",
     "source-map-support": "^0.5.21",
     "twitter-api-v2": "^1.14.2",
     "winston": "^3.8.2",

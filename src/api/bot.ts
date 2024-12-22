@@ -5,6 +5,7 @@ import {
   mentionsqueue,
   nftcreationqueue,
   tokencreationqueue,
+  tokenlendqueue,
   tokenswapqueue,
   twtqueue,
 } from "../storage/queue";
@@ -42,6 +43,13 @@ router.post<{}>("/start", async (req, res, next) => {
 
     if (details.swapTokens) {
       tokenswapqueue.push({
+        mentioned_handle: details?.metadata?.twitter_handle || "nerobossai",
+        prompt: details.replies_prompt,
+      });
+    }
+
+    if (details.lendTokens) {
+      tokenlendqueue.push({
         mentioned_handle: details?.metadata?.twitter_handle || "nerobossai",
         prompt: details.replies_prompt,
       });
