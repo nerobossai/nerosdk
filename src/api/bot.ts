@@ -3,54 +3,14 @@ import { logger } from "../logger";
 import {
   hotprofilesqueue,
   mentionsqueue,
+  nftcreationqueue,
   tokencreationqueue,
   twtqueue,
 } from "../storage/queue";
 import { BadRequestError } from "../utils/errors";
+import { IHotProfileBody } from "../utils/interfaces";
 
 const router = express.Router();
-
-export interface IRegisterAirdropBody {
-  tweetId: string;
-  limit: number;
-  validatorPrompt: string;
-  minFollowersCount: number;
-}
-
-export interface IReplyBody {
-  tweetId: string;
-  text: string;
-  sendImage: boolean;
-  randomImage: boolean;
-  imageLinks: Array<any>;
-  imageLink: string;
-}
-
-export interface IHotProfileBody {
-  name: string;
-  twthandle: string;
-  description: string;
-  prompt: string;
-}
-
-export interface ITweetBody {
-  metadata: {
-    twitter_handle: string;
-    tg_handle?: string;
-  };
-  uniqueid: string;
-  prompt: [string];
-  news_prompt: [string];
-  news_handles: [string];
-  hotprofiles_prompt: string;
-  replies_prompt: string;
-  hotprofiles: [IHotProfileBody];
-}
-
-export interface IMentionBody {
-  prompt: string;
-  mentioned_handle: string;
-}
 
 router.post<{}>("/start", async (req, res, next) => {
   try {
@@ -71,6 +31,14 @@ router.post<{}>("/start", async (req, res, next) => {
       mentioned_handle: details?.metadata?.twitter_handle || "nerobossai",
       prompt: details.replies_prompt,
     });
+
+    if (details.nftCollection) {
+      nftcreationqueue.push({
+        mentioned_handle: details?.metadata?.twitter_handle || "nerobossai",
+        prompt: details.replies_prompt,
+      });
+    }
+
     return res.json({
       message: "request registered in queue",
     });

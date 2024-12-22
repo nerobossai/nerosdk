@@ -1,4 +1,3 @@
-import { ITweetBody } from "../api/bot";
 import { chatCompletion } from "../services/gpt";
 import { logger } from "../logger";
 import { twtqueue } from "../storage/queue";
@@ -8,6 +7,7 @@ import { getCacheKey, getRandomItem, isOlderThanXHours } from "../utils";
 import { cacheClient } from "../storage/redis";
 import { getUserProfileByUsername } from "./hotProfilesWorker";
 import { ChatCompletion } from "openai/resources";
+import { ITweetBody } from "../utils/interfaces";
 
 const newsUsername = "XNews";
 

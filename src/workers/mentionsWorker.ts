@@ -1,4 +1,3 @@
-import { IMentionBody, IReplyBody } from "../api/bot";
 import { logger } from "../logger";
 import { mentionsCounter } from "../utils/counter";
 import { mentionsqueue, replyqueue } from "../storage/queue";
@@ -12,6 +11,7 @@ import {
 } from "./hotProfilesWorker";
 import { TweetV2 } from "twitter-api-v2";
 import { ChatCompletionUserMessageParam } from "openai/resources";
+import { IMentionBody, IReplyBody } from "../utils/interfaces";
 
 const mentionsHourCheckReset = 0.02;
 

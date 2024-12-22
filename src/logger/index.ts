@@ -18,7 +18,5 @@ export const logger = winston.createLogger({
   level: process.env.NODE_ENV === "development" ? "debug" : "verbose",
   levels: logLevels.levels,
   defaultMeta: { service: "nerosdk" },
-  transports: [
-    new winston.transports.Console(),
-  ],
+  transports: [new winston.transports.Console()],
 });

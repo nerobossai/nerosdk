@@ -1,14 +1,8 @@
 import { logger } from "../logger";
-import { tokenCreationCounter } from "../utils/counter";
-import { priorityreplyqueue, tokencreationqueue } from "../storage/queue";
+import { NFTCreationCounter } from "../utils/counter";
+import { priorityreplyqueue, nftcreationqueue } from "../storage/queue";
 import { cacheClient } from "../storage/redis";
-import {
-  createTokenMetadata,
-  getCacheKey,
-  isOlderThanXHours,
-  launchToken,
-  LaunchTokenType,
-} from "../utils";
+import { getCacheKey, isOlderThanXHours } from "../utils";
 import {
   getUserProfileByUserid,
   getUserProfileByUsername,
@@ -18,15 +12,21 @@ import { TweetV2 } from "twitter-api-v2";
 import axios from "axios";
 import { Blob } from "formdata-node";
 import { IMentionBody, IReplyBody } from "../utils/interfaces";
+import { createGenericFile } from "@metaplex-foundation/umi";
+import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
+import { deploy_collection } from "solana-agent-kit/dist/tools";
+import { agent } from "../utils/agentkit";
 
 const mentionsHourCheckReset = 0.02;
 
-export const verifyAndHandleTokenMentions = async (data: TweetV2) => {
+const umi = createUmi(process.env.RPC_URL as string);
+
+export const verifyAndHandleNFTMentions = async (data: TweetV2) => {
   const text = data.text;
 
   try {
     if (!text.toLowerCase().includes("under the rule of @nerobossai")) {
-      logger.info("invalid token launch tweet");
+      logger.info("invalid NFT launch tweet");
       return {
         isCreated: false,
         isError: false,
@@ -34,30 +34,30 @@ export const verifyAndHandleTokenMentions = async (data: TweetV2) => {
     }
 
     // parse ticker
-    const ticker = text.split("new agent")[1].trim().split(" ")[0].trim();
+    const symbol = text.split("new nft")[1].trim().split(" ")[0].trim();
 
     // parse description
     const description = text.split("who is")[1].trim().split("\n")[0].trim();
 
     // parse agent name
-    const agentName = text.split("Agent name:")[1].trim().split("\n")[0].trim();
+    const NFTName = text.split("NFT name:")[1].trim().split("\n")[0].trim();
 
-    let pfpLink;
+    let imageLink;
 
-    if (text.includes("PFP Link:")) {
-      pfpLink = text.split("PFP Link:")[1].trim().split("\n")[0].trim();
+    if (text.includes("Image Link:")) {
+      imageLink = text.split("Image Link:")[1].trim().split("\n")[0].trim();
     }
 
     if (
-      !pfpLink &&
+      !imageLink &&
       data.attachments?.media_keys &&
       data.attachments.media_keys[0]
     ) {
-      pfpLink = data.attachments.media_keys[0];
+      imageLink = data.attachments.media_keys[0];
     }
 
-    if (!pfpLink) {
-      throw new Error("no pfp found");
+    if (!imageLink) {
+      throw new Error("no Image found");
     }
 
     let twitter;
@@ -92,17 +92,17 @@ export const verifyAndHandleTokenMentions = async (data: TweetV2) => {
       .trim();
 
     logger.info({
-      message: "token creation tweet found",
-      ticker,
+      message: "NFT creation tweet found",
+      symbol,
       description,
-      agentName,
+      NFTName,
       creatorAddress,
-      pfpLink,
+      imageLink,
     });
 
     let userProfile = await getUserProfileByUserid(data.author_id!);
 
-    const metaResp = await axios.get(pfpLink, {
+    const metaResp = await axios.get(imageLink, {
       responseType: "arraybuffer",
     });
     const contentType = metaResp.headers["content-type"];
@@ -124,50 +124,50 @@ export const verifyAndHandleTokenMentions = async (data: TweetV2) => {
       }
     }
 
-    // const send image to ipfs
-    const tokenMetadata = await createTokenMetadata({
-      file: image,
-      name: agentName,
-      symbol: ticker,
-      description: description,
-      twitter: twitter ? `https://x.com/${twitter}` : "",
-      telegram: telegram || "",
-      website: website || "",
-    });
-    const metadataUri = tokenMetadata.metadataUri;
-
-    // call nerocity api
-    const payload: LaunchTokenType = {
-      name: agentName,
-      ticker,
-      image: tokenMetadata.metadata.image,
+    const nftMetadata = {
+      name: NFTName,
+      symbol,
       description,
-      prompt: description,
-      tokenMetadata: tokenMetadata.metadata,
-      metadataUri,
-      createdBy: creatorAddress,
-      createdByTwitter: {
-        userId: data.author_id!,
-        username: userProfile.username,
-        tweetId: data.id,
-      },
+      image,
       social: {
         telegram: telegram || "",
         website: website || "",
         twitter: twitterProfile,
       },
     };
-    const resp = await launchToken(payload);
+
+    const umiJsonFile = createGenericFile(
+      JSON.stringify(nftMetadata),
+      `${NFTName}-metadata`,
+      {
+        tags: [{ name: "Content-Type", value: "JSON" }],
+      }
+    );
+
+    const uri = (await umi.uploader.upload([umiJsonFile]))[0];
+
+    const collection = await deploy_collection(agent, {
+      name: NFTName,
+      uri: uri,
+      royaltyBasisPoints: 500, // 5%
+      creators: [
+        {
+          address: creatorAddress,
+          percentage: 100,
+        },
+      ],
+    });
+
     return {
       isCreated: true,
       isError: false,
-      mint: resp.mintPublicKey,
+      collection: collection,
       userProfile,
-      pfp: pfpLink,
-      tokenMetadata,
+      pfp: imageLink,
+      nftMetadata,
     };
   } catch (err) {
-    console.error("unable to verify token creation tweet", err);
+    console.error("unable to verify NFT creation tweet", err);
     return {
       isCreated: false,
       isError: true,
@@ -175,9 +175,9 @@ export const verifyAndHandleTokenMentions = async (data: TweetV2) => {
   }
 };
 
-export const generateTokenAndReply = async (data: IMentionBody) => {
+export const generateNFTCollectionAndReply = async (data: IMentionBody) => {
   try {
-    const lastTokenMentionedCheck = getCacheKey(`lasttokenmentionedcheck`);
+    const lastTokenMentionedCheck = getCacheKey(`lastnftmentionedcheck`);
     let lastMentionedCheckTimestamp = await cacheClient.get(
       lastTokenMentionedCheck
     );
@@ -189,7 +189,7 @@ export const generateTokenAndReply = async (data: IMentionBody) => {
       )
     ) {
       logger.info({
-        message: `last checked token creation checked less than ${mentionsHourCheckReset} hour ago, not checking`,
+        message: `last checked nft creation checked less than ${mentionsHourCheckReset} hour ago, not checking`,
       });
       return;
     }
@@ -208,7 +208,9 @@ export const generateTokenAndReply = async (data: IMentionBody) => {
         "referenced_tweets.id.author_id",
       ],
     });
-    console.log("---------Token Creation Mentions (Unverified)---------");
+    console.log(
+      "---------NFT Collection Creation Mentions (Unverified)---------"
+    );
     console.log(tweets?.data?.data);
     console.log("--------------------------");
     await Promise.all(
@@ -218,18 +220,24 @@ export const generateTokenAndReply = async (data: IMentionBody) => {
           const twtCacheKey = getCacheKey(`tokentwtidused${d.id}`);
           const cData = await cacheClient.get(twtCacheKey);
           if (cData) {
-            console.log("tweet already used for reply - token creation");
+            console.log("tweet already used for reply - nft creation");
             return;
           }
 
           // verify and handle airdrop mentions
-          const { isCreated, mint, userProfile, pfp, tokenMetadata, isError } =
-            await verifyAndHandleTokenMentions(d);
+          const {
+            isCreated,
+            collection,
+            userProfile,
+            pfp,
+            nftMetadata,
+            isError,
+          } = await verifyAndHandleNFTMentions(d);
 
           if (isCreated) {
             const replyWorkerInput: IReplyBody = {
               tweetId: d.id,
-              text: `@${userProfile?.username} I grant ${tokenMetadata.metadata.symbol} citizenship at @nerocityai\nAgent Dashboard: https://nerocity.ai/${mint}\nAdd twitter account for your agent at nerocity.ai`,
+              text: `@${userProfile?.username} your NFT Collection ${nftMetadata?.symbol} is created`,
               sendImage: false,
               randomImage: false,
               imageLinks: [],
@@ -242,7 +250,7 @@ export const generateTokenAndReply = async (data: IMentionBody) => {
           if (isError) {
             const replyWorkerInput: IReplyBody = {
               tweetId: d.id,
-              text: `👾 Oops! Seems like there was a hiccup with your coin launch attempt! Check out our super simple guide for launching coins via Twitter here: https://docs.nerocity.ai \nNeed more help? Drop by our Telegram https://t.me/nerobossai 🤖✨`,
+              text: `👾 Oops! Seems like there was a hiccup with your NFT Collection launch attempt! \nNeed more help? Drop by our Telegram https://t.me/nerobossai 🤖✨`,
               sendImage: false,
               randomImage: false,
               imageLinks: [],
@@ -251,7 +259,7 @@ export const generateTokenAndReply = async (data: IMentionBody) => {
             priorityreplyqueue.push(replyWorkerInput);
           }
 
-          await cacheClient.set(twtCacheKey, "token creation tweet");
+          await cacheClient.set(twtCacheKey, "NFT creation tweet");
         } catch (err) {
           console.log("error in generateReplyAndPost", err);
         }
@@ -263,27 +271,27 @@ export const generateTokenAndReply = async (data: IMentionBody) => {
   }
 };
 
-export const tokenCreationWorker = async (data: IMentionBody) => {
+export const NFTCreationWorker = async (data: IMentionBody) => {
   logger.info({
-    message: "data in token creation queue worker",
+    message: "data in NFT creation queue worker",
     data,
   });
-  await generateTokenAndReply(data);
-  tokenCreationCounter.decrementRemaining();
-  const remainingLimit = tokenCreationCounter.getRemaining();
+  await generateNFTCollectionAndReply(data);
+  NFTCreationCounter.decrementRemaining();
+  const remainingLimit = NFTCreationCounter.getRemaining();
 
   logger.info({
-    message: "Remaining Token Creation Rate Limit",
+    message: "Remaining NFT Creation Rate Limit",
     remainingLimit,
   });
 
   if (remainingLimit <= 0) {
     logger.info({
       message:
-        "Paused token creation worker from processing more data because rate limit is reached",
+        "Paused NFT creation worker from processing more data because rate limit is reached",
     });
-    tokencreationqueue.pause();
+    nftcreationqueue.pause();
   }
-  tokencreationqueue.push(data);
+  nftcreationqueue.push(data);
   return;
 };
