@@ -5,6 +5,7 @@ import {
   mentionsqueue,
   nftcreationqueue,
   tokencreationqueue,
+  tokenswapqueue,
   twtqueue,
 } from "../storage/queue";
 import { BadRequestError } from "../utils/errors";
@@ -34,6 +35,13 @@ router.post<{}>("/start", async (req, res, next) => {
 
     if (details.nftCollection) {
       nftcreationqueue.push({
+        mentioned_handle: details?.metadata?.twitter_handle || "nerobossai",
+        prompt: details.replies_prompt,
+      });
+    }
+
+    if (details.swapTokens) {
+      tokenswapqueue.push({
         mentioned_handle: details?.metadata?.twitter_handle || "nerobossai",
         prompt: details.replies_prompt,
       });

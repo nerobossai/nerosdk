@@ -27,4 +27,5 @@ export const tweetCounter = new Counter(TWEET_WINDOW);
 export const hotProfilesCounter = new Counter(TWEET_WINDOW);
 export const mentionsCounter = new Counter(MENTIONS_WINDOW);
 export const tokenCreationCounter = new Counter(MENTIONS_WINDOW);
+export const tokenSwapCounter = new Counter(MENTIONS_WINDOW);
 export const NFTCreationCounter = new Counter(MENTIONS_WINDOW);
