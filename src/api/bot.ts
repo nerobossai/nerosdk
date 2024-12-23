@@ -1,6 +1,7 @@
 import express from "express";
 import { logger } from "../logger";
 import {
+  fetchtokenpricequeue,
   hotprofilesqueue,
   mentionsqueue,
   nftcreationqueue,
@@ -56,8 +57,15 @@ router.post<{}>("/start", async (req, res, next) => {
       });
     }
 
-    if (details.lendTokens) {
+    if (details.stakeSOL) {
       solstakequeue.push({
+        mentioned_handle: details?.metadata?.twitter_handle || "nerobossai",
+        prompt: details.replies_prompt,
+      });
+    }
+
+    if (details.fetchTokenPrice) {
+      fetchtokenpricequeue.push({
         mentioned_handle: details?.metadata?.twitter_handle || "nerobossai",
         prompt: details.replies_prompt,
       });
