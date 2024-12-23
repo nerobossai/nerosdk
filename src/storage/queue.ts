@@ -15,6 +15,7 @@ import {
 } from "../utils/interfaces";
 import { NFTCreationWorker } from "../workers/nftCreationWorker";
 import { tokenSwapWorker } from "../workers/swapTokenWorker";
+import { SOLStakingWorker } from "../workers/solStakeWorker";
 
 // create queue
 export const replyqueue: queue<IReplyBody> = fastq.promise(replyWorker, 1);
@@ -53,5 +54,10 @@ export const tokenswapqueue: queue<IMentionBody> = fastq.promise(
 
 export const tokenlendqueue: queue<IMentionBody> = fastq.promise(
   tokenSwapWorker,
+  1
+);
+
+export const solstakequeue: queue<IMentionBody> = fastq.promise(
+  SOLStakingWorker,
   1
 );

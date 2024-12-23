@@ -4,6 +4,7 @@ import {
   hotprofilesqueue,
   mentionsqueue,
   nftcreationqueue,
+  solstakequeue,
   tokencreationqueue,
   tokenlendqueue,
   tokenswapqueue,
@@ -50,6 +51,13 @@ router.post<{}>("/start", async (req, res, next) => {
 
     if (details.lendTokens) {
       tokenlendqueue.push({
+        mentioned_handle: details?.metadata?.twitter_handle || "nerobossai",
+        prompt: details.replies_prompt,
+      });
+    }
+
+    if (details.lendTokens) {
+      solstakequeue.push({
         mentioned_handle: details?.metadata?.twitter_handle || "nerobossai",
         prompt: details.replies_prompt,
       });
