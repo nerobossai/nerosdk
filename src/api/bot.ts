@@ -6,6 +6,7 @@ import {
   mentionsqueue,
   nftcreationqueue,
   solstakequeue,
+  tokenairdropqueue,
   tokencreationqueue,
   tokenlendqueue,
   tokenswapqueue,
@@ -66,6 +67,13 @@ router.post<{}>("/start", async (req, res, next) => {
 
     if (details.fetchTokenPrice) {
       fetchtokenpricequeue.push({
+        mentioned_handle: details?.metadata?.twitter_handle || "nerobossai",
+        prompt: details.replies_prompt,
+      });
+    }
+
+    if (details.airdropTokens) {
+      tokenairdropqueue.push({
         mentioned_handle: details?.metadata?.twitter_handle || "nerobossai",
         prompt: details.replies_prompt,
       });

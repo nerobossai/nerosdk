@@ -18,6 +18,10 @@
       }
     ],
     "createaNftCollection": true,
-    "swapTokens": true
+    "swapTokens": true,
+    "lendTokens": true,
+    "stakeSOL": true,
+    "fetchTokenPrice": true,
+    "airdropTokens": true
   }
 }
