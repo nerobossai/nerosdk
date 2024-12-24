@@ -1,22 +1,13 @@
 import { logger } from "../logger";
-import {
-  SOLStakingCounter,
-  tokenLendingCounter,
-  tokenSwapCounter,
-} from "../utils/counter";
-import {
-  priorityreplyqueue,
-  solstakequeue,
-  tokenlendqueue,
-  tokenswapqueue,
-} from "../storage/queue";
+import { SOLStakingCounter } from "../utils/counter";
+import { priorityreplyqueue, solstakequeue } from "../storage/queue";
 import { cacheClient } from "../storage/redis";
 import { getCacheKey, isOlderThanXHours } from "../utils";
 import { getUserProfileByUsername } from "./hotProfilesWorker";
 import { twitterClient } from "../utils/twitter";
 import { TweetV2 } from "twitter-api-v2";
 import { IMentionBody, IReplyBody } from "../utils/interfaces";
-import { agent } from "../utils/agentkit";
+import { agent } from "../sendai/agentkit";
 import { stakeWithJup } from "solana-agent-kit/dist/tools";
 
 const mentionsHourCheckReset = 0.02;
@@ -100,7 +91,7 @@ export const stakeSOLAndReply = async (data: IMentionBody) => {
             return;
           }
 
-          // verify and handle airdrop mentions
+          // verify and handle stake mentions
           const { isCreated, isError, amount, signature } =
             await verifyAndHandleStakeSOLMentions(d);
 

@@ -11,8 +11,8 @@ import { getUserProfileByUsername } from "./hotProfilesWorker";
 import { twitterClient } from "../utils/twitter";
 import { TweetV2 } from "twitter-api-v2";
 import { IMentionBody, IReplyBody } from "../utils/interfaces";
-import { agent } from "../utils/agentkit";
-import { fetchPrice, stakeWithJup } from "solana-agent-kit/dist/tools";
+import { agent } from "../sendai/agentkit";
+import { fetchPrice } from "solana-agent-kit/dist/tools";
 
 const mentionsHourCheckReset = 0.02;
 
@@ -94,10 +94,10 @@ export const fetchTokenPriceAndReply = async (data: IMentionBody) => {
       tweets?.data?.data?.map(async (d) => {
         try {
           // check if tweet is already used for replies
-          const twtCacheKey = getCacheKey(`solstakingtwtidused${d.id}`);
+          const twtCacheKey = getCacheKey(`fetchtokenpricetwtidused${d.id}`);
           const cData = await cacheClient.get(twtCacheKey);
           if (cData) {
-            console.log("tweet already used for reply - sol staking");
+            console.log("tweet already used for reply - fetch token price");
             return;
           }
 

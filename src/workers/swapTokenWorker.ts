@@ -8,7 +8,7 @@ import { twitterClient } from "../utils/twitter";
 import { TweetV2 } from "twitter-api-v2";
 import { IMentionBody, IReplyBody } from "../utils/interfaces";
 import { trade } from "solana-agent-kit/dist/tools";
-import { agent } from "../utils/agentkit";
+import { agent } from "../sendai/agentkit";
 import { PublicKey } from "@solana/web3.js";
 
 const mentionsHourCheckReset = 0.02;
@@ -104,7 +104,7 @@ export const swapTokenAndReply = async (data: IMentionBody) => {
         "referenced_tweets.id.author_id",
       ],
     });
-    console.log("---------Token Creation Mentions (Unverified)---------");
+    console.log("---------Token Swap Mentions (Unverified)---------");
     console.log(tweets?.data?.data);
     console.log("--------------------------");
     await Promise.all(
@@ -114,7 +114,7 @@ export const swapTokenAndReply = async (data: IMentionBody) => {
           const twtCacheKey = getCacheKey(`tokenswaptwtidused${d.id}`);
           const cData = await cacheClient.get(twtCacheKey);
           if (cData) {
-            console.log("tweet already used for reply - token creation");
+            console.log("tweet already used for reply - token swap");
             return;
           }
 

@@ -11,7 +11,7 @@ import { getUserProfileByUsername } from "./hotProfilesWorker";
 import { twitterClient } from "../utils/twitter";
 import { TweetV2 } from "twitter-api-v2";
 import { IMentionBody, IReplyBody } from "../utils/interfaces";
-import { agent } from "../utils/agentkit";
+import { agent } from "../sendai/agentkit";
 
 const mentionsHourCheckReset = 0.02;
 
@@ -123,7 +123,7 @@ export const lendTokenAndReply = async (data: IMentionBody) => {
             priorityreplyqueue.push(replyWorkerInput);
           }
 
-          await cacheClient.set(twtCacheKey, "token swap tweet");
+          await cacheClient.set(twtCacheKey, "token lending tweet");
         } catch (err) {
           console.log("error in generateReplyAndPost", err);
         }

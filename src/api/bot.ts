@@ -14,6 +14,7 @@ import {
 } from "../storage/queue";
 import { BadRequestError } from "../utils/errors";
 import { IHotProfileBody } from "../utils/interfaces";
+import { DEFAULT_X_HANDLE } from "../utils/constants";
 
 const router = express.Router();
 
@@ -29,52 +30,60 @@ router.post<{}>("/start", async (req, res, next) => {
     });
     hotprofilesqueue.resume();
     mentionsqueue.push({
-      mentioned_handle: details?.metadata?.twitter_handle || "nerobossai",
-      prompt: details.replies_prompt,
-    });
-    tokencreationqueue.push({
-      mentioned_handle: details?.metadata?.twitter_handle || "nerobossai",
+      mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
       prompt: details.replies_prompt,
     });
 
+    // Create Token
+    tokencreationqueue.push({
+      mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
+      prompt: details.replies_prompt,
+    });
+
+    // create NFT collection using metaplex code
     if (details.nftCollection) {
       nftcreationqueue.push({
-        mentioned_handle: details?.metadata?.twitter_handle || "nerobossai",
+        mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
         prompt: details.replies_prompt,
       });
     }
 
+    // swap tokens using jupiter api
     if (details.swapTokens) {
       tokenswapqueue.push({
-        mentioned_handle: details?.metadata?.twitter_handle || "nerobossai",
+        mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
         prompt: details.replies_prompt,
       });
     }
 
+    // lend tokens
     if (details.lendTokens) {
       tokenlendqueue.push({
-        mentioned_handle: details?.metadata?.twitter_handle || "nerobossai",
+        mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
         prompt: details.replies_prompt,
       });
     }
 
+    // stake solana
     if (details.stakeSOL) {
       solstakequeue.push({
-        mentioned_handle: details?.metadata?.twitter_handle || "nerobossai",
+        mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
         prompt: details.replies_prompt,
       });
     }
 
+    // fetch tokens
     if (details.fetchTokenPrice) {
       fetchtokenpricequeue.push({
-        mentioned_handle: details?.metadata?.twitter_handle || "nerobossai",
+        mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
         prompt: details.replies_prompt,
       });
     }
 
+    // airdrop SPL tokens
     if (details.airdropTokens) {
       tokenairdropqueue.push({
-        mentioned_handle: details?.metadata?.twitter_handle || "nerobossai",
+        mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
         prompt: details.replies_prompt,
       });
     }

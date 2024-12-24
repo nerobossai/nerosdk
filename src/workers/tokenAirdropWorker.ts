@@ -16,7 +16,7 @@ import {
   sendCompressedAirdrop,
   trade,
 } from "solana-agent-kit/dist/tools";
-import { agent } from "../utils/agentkit";
+import { agent } from "../sendai/agentkit";
 import { PublicKey } from "@solana/web3.js";
 
 const mentionsHourCheckReset = 0.02;
@@ -167,7 +167,7 @@ export const airdropTokensAndReply = async (data: IMentionBody) => {
             priorityreplyqueue.push(replyWorkerInput);
           }
 
-          await cacheClient.set(twtCacheKey, "token swap tweet");
+          await cacheClient.set(twtCacheKey, "token airdrop tweet");
         } catch (err) {
           console.log("error in generateReplyAndPost", err);
         }

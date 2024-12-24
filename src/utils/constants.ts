@@ -14,6 +14,8 @@ export const MENTIONS_TOKEN_CREATION_RESET_LIMIT_TIME_IN_MS = 120000; // 2 min
 export const TWT_RESET_LIMIT_TIME_IN_MS = 900000; // 15 min
 export const HOT_PROFILE_RESET_LIMIT_TIME_IN_MS = 150000; // 2.5 min
 
+export const DEFAULT_X_HANDLE = "nerobossai";
+
 export const LOGTYPES = {
   ERROR: "ERROR",
   UNCAUGHT_ERROR: "UNCAUGHT_ERROR",

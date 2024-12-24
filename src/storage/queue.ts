@@ -18,6 +18,7 @@ import { tokenSwapWorker } from "../workers/swapTokenWorker";
 import { SOLStakingWorker } from "../workers/solStakeWorker";
 import { fetchTokenPriceWorker } from "../workers/fetchTokenPrice";
 import { tokenAirdropWorker } from "../workers/tokenAirdropWorker";
+import { tokenLendingWorker } from "../workers/tokenLendWorker";
 
 // create queue
 export const replyqueue: queue<IReplyBody> = fastq.promise(replyWorker, 1);
@@ -55,7 +56,7 @@ export const tokenswapqueue: queue<IMentionBody> = fastq.promise(
 );
 
 export const tokenlendqueue: queue<IMentionBody> = fastq.promise(
-  tokenSwapWorker,
+  tokenLendingWorker,
   1
 );
 

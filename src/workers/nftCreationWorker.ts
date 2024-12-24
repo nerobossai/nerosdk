@@ -15,7 +15,7 @@ import { IMentionBody, IReplyBody } from "../utils/interfaces";
 import { createGenericFile } from "@metaplex-foundation/umi";
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
 import { deploy_collection } from "solana-agent-kit/dist/tools";
-import { agent } from "../utils/agentkit";
+import { agent } from "../sendai/agentkit";
 
 const mentionsHourCheckReset = 0.02;
 
@@ -217,7 +217,7 @@ export const generateNFTCollectionAndReply = async (data: IMentionBody) => {
       tweets?.data?.data?.map(async (d) => {
         try {
           // check if tweet is already used for replies
-          const twtCacheKey = getCacheKey(`tokentwtidused${d.id}`);
+          const twtCacheKey = getCacheKey(`nftcreationtwtidused${d.id}`);
           const cData = await cacheClient.get(twtCacheKey);
           if (cData) {
             console.log("tweet already used for reply - nft creation");
@@ -225,14 +225,8 @@ export const generateNFTCollectionAndReply = async (data: IMentionBody) => {
           }
 
           // verify and handle airdrop mentions
-          const {
-            isCreated,
-            collection,
-            userProfile,
-            pfp,
-            nftMetadata,
-            isError,
-          } = await verifyAndHandleNFTMentions(d);
+          const { isCreated, userProfile, nftMetadata, isError } =
+            await verifyAndHandleNFTMentions(d);
 
           if (isCreated) {
             const replyWorkerInput: IReplyBody = {
