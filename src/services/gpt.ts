@@ -4,8 +4,7 @@ import { ChatCompletionUserMessageParam } from "openai/resources";
 const openai = new OpenAI();
 
 // update this header
-const promptConstantHeader =
-  "";
+const promptConstantHeader = "";
 const promptConstantFooter =
   "\n\nNote: Keep your post under 100 characters, use no emojis, no hashtags and keep everything lowercase.";
 

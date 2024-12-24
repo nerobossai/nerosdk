@@ -1,9 +1,9 @@
-import express from 'express';
+import express from "express";
 
-import bot from './bot';
+import bot from "./bot";
 
 const router = express.Router();
 
-router.use('/bot', bot);
+router.use("/bot", bot);
 
 export default router;

@@ -1,56 +1,22 @@
 import express from "express";
 import { logger } from "../logger";
 import {
+  fetchtokenpricequeue,
   hotprofilesqueue,
   mentionsqueue,
+  nftcreationqueue,
+  solstakequeue,
+  tokenairdropqueue,
   tokencreationqueue,
+  tokenlendqueue,
+  tokenswapqueue,
   twtqueue,
 } from "../storage/queue";
 import { BadRequestError } from "../utils/errors";
+import { IHotProfileBody } from "../utils/interfaces";
+import { DEFAULT_X_HANDLE } from "../utils/constants";
 
 const router = express.Router();
-
-export interface IRegisterAirdropBody {
-  tweetId: string;
-  limit: number;
-  validatorPrompt: string;
-  minFollowersCount: number;
-}
-
-export interface IReplyBody {
-  tweetId: string;
-  text: string;
-  sendImage: boolean;
-  randomImage: boolean;
-  imageLinks: Array<any>;
-  imageLink: string;
-}
-
-export interface IHotProfileBody {
-  name: string;
-  twthandle: string;
-  description: string;
-  prompt: string;
-}
-
-export interface ITweetBody {
-  metadata: {
-    twitter_handle: string;
-    tg_handle?: string;
-  };
-  uniqueid: string;
-  prompt: [string];
-  news_prompt: [string];
-  news_handles: [string];
-  hotprofiles_prompt: string;
-  replies_prompt: string;
-  hotprofiles: [IHotProfileBody];
-}
-
-export interface IMentionBody {
-  prompt: string;
-  mentioned_handle: string;
-}
 
 router.post<{}>("/start", async (req, res, next) => {
   try {
@@ -64,13 +30,64 @@ router.post<{}>("/start", async (req, res, next) => {
     });
     hotprofilesqueue.resume();
     mentionsqueue.push({
-      mentioned_handle: details?.metadata?.twitter_handle || "nerobossai",
+      mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
       prompt: details.replies_prompt,
     });
+
+    // Create Token
     tokencreationqueue.push({
-      mentioned_handle: details?.metadata?.twitter_handle || "nerobossai",
+      mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
       prompt: details.replies_prompt,
     });
+
+    // create NFT collection using metaplex code
+    if (details.sendai.createNftCollection) {
+      nftcreationqueue.push({
+        mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
+        prompt: details.replies_prompt,
+      });
+    }
+
+    // swap tokens using jupiter api
+    if (details.sendai.swapTokens) {
+      tokenswapqueue.push({
+        mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
+        prompt: details.replies_prompt,
+      });
+    }
+
+    // lend tokens
+    if (details.sendai.lendTokens) {
+      tokenlendqueue.push({
+        mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
+        prompt: details.replies_prompt,
+      });
+    }
+
+    // stake solana
+    if (details.sendai.stakeSOL) {
+      solstakequeue.push({
+        mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
+        prompt: details.replies_prompt,
+      });
+    }
+
+    // fetch tokens
+    if (details.sendai.fetchTokenPrice) {
+      fetchtokenpricequeue.push({
+        mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
+        prompt: details.replies_prompt,
+      });
+    }
+
+    // airdrop SPL tokens
+    if (details.sendai.airdropTokens) {
+      tokenairdropqueue.push({
+        mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
+        prompt: details.replies_prompt,
+      });
+    }
+
     return res.json({
       message: "request registered in queue",
     });

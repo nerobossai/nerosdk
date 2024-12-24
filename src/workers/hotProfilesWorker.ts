@@ -1,4 +1,3 @@
-import { IHotProfileBody, IReplyBody } from "../api/bot";
 import { chatCompletion } from "../services/gpt";
 import { logger } from "../logger";
 import { hotprofilesqueue, replyqueue } from "../storage/queue";
@@ -8,6 +7,7 @@ import { getCacheKey } from "../utils";
 import { cacheClient } from "../storage/redis";
 import { UserV2 } from "twitter-api-v2";
 import { ChatCompletionUserMessageParam } from "openai/resources";
+import { IHotProfileBody, IReplyBody } from "../utils/interfaces";
 
 export type FetchUserAndCommentProps = {
   username: string;

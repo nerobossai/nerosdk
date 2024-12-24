@@ -1,8 +1,8 @@
-import { IReplyBody } from "../api/bot";
 import { logger } from "../logger";
 import { priorityreplyqueue } from "../storage/queue";
 import { getImageFromUrl, getRandomFromArray } from "../utils";
 import { priorityCounter } from "../utils/counter";
+import { IReplyBody } from "../utils/interfaces";
 import { twitterClient } from "../utils/twitter";
 
 const sendReply = async (tweetId: string, text: string, config: IReplyBody) => {
