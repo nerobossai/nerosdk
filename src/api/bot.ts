@@ -41,7 +41,7 @@ router.post<{}>("/start", async (req, res, next) => {
     });
 
     // create NFT collection using metaplex code
-    if (details.nftCollection) {
+    if (details.sendai.createNftCollection) {
       nftcreationqueue.push({
         mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
         prompt: details.replies_prompt,
@@ -49,7 +49,7 @@ router.post<{}>("/start", async (req, res, next) => {
     }
 
     // swap tokens using jupiter api
-    if (details.swapTokens) {
+    if (details.sendai.swapTokens) {
       tokenswapqueue.push({
         mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
         prompt: details.replies_prompt,
@@ -57,7 +57,7 @@ router.post<{}>("/start", async (req, res, next) => {
     }
 
     // lend tokens
-    if (details.lendTokens) {
+    if (details.sendai.lendTokens) {
       tokenlendqueue.push({
         mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
         prompt: details.replies_prompt,
@@ -65,7 +65,7 @@ router.post<{}>("/start", async (req, res, next) => {
     }
 
     // stake solana
-    if (details.stakeSOL) {
+    if (details.sendai.stakeSOL) {
       solstakequeue.push({
         mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
         prompt: details.replies_prompt,
@@ -73,7 +73,7 @@ router.post<{}>("/start", async (req, res, next) => {
     }
 
     // fetch tokens
-    if (details.fetchTokenPrice) {
+    if (details.sendai.fetchTokenPrice) {
       fetchtokenpricequeue.push({
         mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
         prompt: details.replies_prompt,
@@ -81,7 +81,7 @@ router.post<{}>("/start", async (req, res, next) => {
     }
 
     // airdrop SPL tokens
-    if (details.airdropTokens) {
+    if (details.sendai.airdropTokens) {
       tokenairdropqueue.push({
         mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
         prompt: details.replies_prompt,
