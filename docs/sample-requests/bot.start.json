@@ -20,11 +20,13 @@
         "prompt": "You are nerosdk, check sentiment of the given message and roast elon musk. Keep replies to 2 lines. Don’t use hashtags"
       }
     ],
-    "createaNftCollection": true,
-    "swapTokens": true,
-    "lendTokens": true,
-    "stakeSOL": true,
-    "fetchTokenPrice": true,
-    "airdropTokens": true
+    "sendai": {
+      "createaNftCollection": true,
+      "swapTokens": true,
+      "lendTokens": true,
+      "stakeSOL": true,
+      "fetchTokenPrice": true,
+      "airdropTokens": true
+    }
   }
 }
