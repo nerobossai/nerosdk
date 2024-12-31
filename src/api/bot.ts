@@ -1,6 +1,7 @@
 import express from "express";
 import { logger } from "../logger";
 import {
+  deploytokenqueue,
   fetchtokenpricequeue,
   hotprofilesqueue,
   mentionsqueue,
@@ -39,6 +40,14 @@ router.post<{}>("/start", async (req, res, next) => {
       mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
       prompt: details.replies_prompt,
     });
+
+    // create token using SENDAI solana-agent-ket
+    if (details.sendai.deployToken) {
+      deploytokenqueue.push({
+        mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
+        prompt: details.replies_prompt,
+      });
+    }
 
     // create NFT collection using metaplex code
     if (details.sendai.createNftCollection) {

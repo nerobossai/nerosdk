@@ -21,6 +21,7 @@
       }
     ],
     "sendai": {
+      "deployToken": true,
       "createNftCollection": true,
       "swapTokens": true,
       "lendTokens": true,
