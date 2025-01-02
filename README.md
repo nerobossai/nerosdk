@@ -88,5 +88,6 @@ Check our contribution guidelines [here](https://github.com/nerobossai/nerosdk/b
 ## Acknowledgments
 The development of `nerosdk` is inspired by the principles of decentralization and community-driven innovation outlined by Nero Labs. We extend our gratitude to the Nero community for their support and contributions.
 
-Nerocity API Key: e9DDuU4puwTiZwWLqisJ7itsb98l8b8RowdGPepwy77mA 
-(this might change frequently so kindly check this periodically)
+## Environment Variables
+Nerocity API Key: e9DDuU4puwTiZwWLqisJ7itsb98l8b8RowdGPepwy77mA <br/>
+(Nerocity API key might change frequently so kindly check this periodically)
