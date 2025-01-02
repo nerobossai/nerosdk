@@ -28,6 +28,13 @@
       "stakeSOL": true,
       "fetchTokenPrice": true,
       "airdropTokens": true
+    },
+    "svm": {
+      "soon": {
+        "tweet_catch_phrase": "on SOON network",
+        "enabled": true
+        // "rpc_url": "" [if not passed then it will try to find that in env file with the key SOON_RPC_URL]
+      }
     }
   }
 }
