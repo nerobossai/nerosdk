@@ -29,6 +29,16 @@ export class SvmAgentKits {
     };
   }
 
+  public static getAllCatchPhrasesWithAgent() {
+    const data = Object.values(SvmAgentKits.kits).map((d: any) => {
+      return {
+        phrase: d.raw.tweet_catch_phrase,
+        agent: d.agent,
+      };
+    });
+    return data;
+  }
+
   public static getAgent(name: string) {
     if (!SvmAgentKits.kits[name]) return null;
     return SvmAgentKits.kits[name].agent;

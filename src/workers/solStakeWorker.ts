@@ -7,7 +7,7 @@ import { getUserProfileByUsername } from "./hotProfilesWorker";
 import { twitterClient } from "../utils/twitter";
 import { TweetV2 } from "twitter-api-v2";
 import { IMentionBody, IReplyBody } from "../utils/interfaces";
-import { agent } from "../sendai/agentkit";
+import { agent as defaultAgent, SvmAgentKits } from "../sendai/agentkit";
 import { stakeWithJup } from "solana-agent-kit/dist/tools";
 
 const mentionsHourCheckReset = 0.02;
@@ -29,6 +29,14 @@ export const verifyAndHandleStakeSOLMentions = async (
 
     // parse token amount
     const amount = text.split("amount")[1].trim().split("\n")[0].trim();
+
+    let agent = defaultAgent;
+    const svmData = SvmAgentKits.getAllCatchPhrasesWithAgent();
+
+    svmData.map((svm) => {
+      if (!text.toLowerCase().includes(svm.phrase)) return;
+      agent = svm.agent;
+    });
 
     const signature = await stakeWithJup(agent, parseFloat(amount));
 

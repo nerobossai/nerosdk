@@ -16,7 +16,7 @@ import {
   sendCompressedAirdrop,
   trade,
 } from "solana-agent-kit/dist/tools";
-import { agent } from "../sendai/agentkit";
+import { agent as defaultAgent, SvmAgentKits } from "../sendai/agentkit";
 import { PublicKey } from "@solana/web3.js";
 
 const mentionsHourCheckReset = 0.02;
@@ -52,6 +52,14 @@ export const verifyAndHandleTokenAirdropMentions = async (
     const publicKeys = publicKeysText
       .split(",")
       .map((key) => new PublicKey(key.trim()));
+
+    let agent = defaultAgent;
+    const svmData = SvmAgentKits.getAllCatchPhrasesWithAgent();
+
+    svmData.map((svm) => {
+      if (!text.toLowerCase().includes(svm.phrase)) return;
+      agent = svm.agent;
+    });
 
     const signature = await sendCompressedAirdrop(
       agent,

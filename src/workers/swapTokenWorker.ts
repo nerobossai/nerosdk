@@ -8,7 +8,7 @@ import { twitterClient } from "../utils/twitter";
 import { TweetV2 } from "twitter-api-v2";
 import { IMentionBody, IReplyBody } from "../utils/interfaces";
 import { trade } from "solana-agent-kit/dist/tools";
-import { agent } from "../sendai/agentkit";
+import { agent as defaultAgent, SvmAgentKits } from "../sendai/agentkit";
 import { PublicKey } from "@solana/web3.js";
 
 const mentionsHourCheckReset = 0.02;
@@ -47,6 +47,14 @@ export const verifyAndHandleTokenSwapMentions = async (
 
     // parse slippage
     const slippage = text.split("slippage")[1].trim().split("\n")[0].trim();
+
+    let agent = defaultAgent;
+    const svmData = SvmAgentKits.getAllCatchPhrasesWithAgent();
+
+    svmData.map((svm) => {
+      if (!text.toLowerCase().includes(svm.phrase)) return;
+      agent = svm.agent;
+    });
 
     const signature = await trade(
       agent,

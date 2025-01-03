@@ -15,7 +15,7 @@ import { IMentionBody, IReplyBody } from "../utils/interfaces";
 import { createGenericFile } from "@metaplex-foundation/umi";
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
 import { deploy_collection } from "solana-agent-kit/dist/tools";
-import { agent } from "../sendai/agentkit";
+import { agent as defaultAgent, SvmAgentKits } from "../sendai/agentkit";
 
 const mentionsHourCheckReset = 0.02;
 
@@ -148,6 +148,14 @@ export const verifyAndHandleNFTMentions = async (
     );
 
     const uri = (await umi.uploader.upload([umiJsonFile]))[0];
+
+    let agent = defaultAgent;
+    const svmData = SvmAgentKits.getAllCatchPhrasesWithAgent();
+
+    svmData.map((svm) => {
+      if (!text.toLowerCase().includes(svm.phrase)) return;
+      agent = svm.agent;
+    });
 
     const collection = await deploy_collection(agent, {
       name: NFTName,
