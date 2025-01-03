@@ -49,3 +49,14 @@ export interface INFTCollection {
     percentage: number;
   }>;
 }
+
+export interface ISvmAgentKit {
+  name: string;
+  tweet_catch_phrase: string;
+  enabled: boolean;
+  environments: {
+    rpc_endpoint: string;
+    private_key: string;
+  };
+  from_env_file: boolean;
+}
