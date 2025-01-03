@@ -71,13 +71,17 @@ npm start
       "fetchTokenPrice": true,
       "airdropTokens": true
     },
-    "svm": {
-      "soon": {
+    "svm": [
+      {
+        "name": "soon",
         "tweet_catch_phrase": "on SOON network",
-        "enabled": true
-        // "rpc_url": "" [if not passed then it will try to find that in env file with the key SOON_RPC_URL]
+        "environments": {
+          "rpc_endpoint": "",
+          "private_key": ""
+        },
+        "from_env_file": false // if true then you need to pass env variable name in "environments.<key>" values
       }
-    }
+    ]
   }
 }
 ```
@@ -97,6 +101,7 @@ You can toggle features you want to enable for your AI agent in the "sendai" blo
 7. **Airdrop Tokens**
 
 ### Solana Virtual Machine Support (SVM)
+
 You can add svm support by configuring it inside "svm" block of start request
 
 ### ⚡ Supported SVM
