@@ -14,8 +14,9 @@ import {
   twtqueue,
 } from "../storage/queue";
 import { BadRequestError } from "../utils/errors";
-import { IHotProfileBody } from "../utils/interfaces";
+import { IHotProfileBody, ISvmAgentKit } from "../utils/interfaces";
 import { DEFAULT_X_HANDLE } from "../utils/constants";
+import { SvmAgentKits } from "../sendai/agentkit";
 
 const router = express.Router();
 
@@ -23,6 +24,14 @@ router.post<{}>("/start", async (req, res, next) => {
   try {
     const { details } = req.body;
     if (!details) throw new BadRequestError();
+
+    // configure agent kits
+    if (details.svm) {
+      details.svm.map((svm: ISvmAgentKit) => {
+        SvmAgentKits.create(svm);
+      });
+    }
+
     // send request in internal queue
     twtqueue.push(details);
     hotprofilesqueue.pause();
