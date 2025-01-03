@@ -42,6 +42,7 @@ npm start
 ```json
 {
   "details": {
+    "tools_catch_phrase": "hey @codingtux", // catch phrase which will enable tools like sendai, launch ai agent etc
     "metadata": {
       "twitter_handle": "CodingTux"
     },
