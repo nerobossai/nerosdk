@@ -7,15 +7,18 @@ import { getUserProfileByUsername } from "./hotProfilesWorker";
 import { twitterClient } from "../utils/twitter";
 import { TweetV2 } from "twitter-api-v2";
 import { IMentionBody, IReplyBody } from "../utils/interfaces";
-import { agent } from "../sendai/agentkit";
+import { agent as defaultAgent, SvmAgentKits } from "../sendai/agentkit";
 
 const mentionsHourCheckReset = 0.02;
 
-export const verifyAndHandleStakeSOLMentions = async (data: TweetV2) => {
+export const verifyAndHandleStakeSOLMentions = async (
+  data: TweetV2,
+  request: IMentionBody
+) => {
   const text = data.text;
 
   try {
-    if (!text.toLowerCase().includes("under the rule of @nerobossai")) {
+    if (!text.toLowerCase().includes(request.request.tools_catch_phrase)) {
       logger.info("invalid token deploy tweet");
       return {
         isCreated: false,
@@ -34,6 +37,14 @@ export const verifyAndHandleStakeSOLMentions = async (data: TweetV2) => {
       .trim()
       .split("\n")[0]
       .trim();
+
+    let agent = defaultAgent;
+    const svmData = SvmAgentKits.getAllCatchPhrasesWithAgent();
+
+    svmData.map((svm) => {
+      if (!text.toLowerCase().includes(svm.phrase)) return;
+      agent = svm.agent;
+    });
 
     const mintAddress = await agent.deployToken(
       name,
@@ -112,7 +123,7 @@ export const deployTokenAndReply = async (data: IMentionBody) => {
 
           // verify and handle stake mentions
           const { isCreated, isError, amount, name, symbol, mintAddress, uri } =
-            await verifyAndHandleStakeSOLMentions(d);
+            await verifyAndHandleStakeSOLMentions(d, data);
 
           if (isCreated) {
             const replyWorkerInput: IReplyBody = {

@@ -1,5 +1,6 @@
 {
   "details": {
+    "tools_catch_phrase": "hey @codingtux", // catch phrase which will enable tools like sendai, launch ai agent etc
     "metadata": {
       "twitter_handle": "CodingTux"
     },
@@ -28,6 +29,17 @@
       "stakeSOL": true,
       "fetchTokenPrice": true,
       "airdropTokens": true
-    }
+    },
+    "svm": [
+      {
+        "name": "soon",
+        "tweet_catch_phrase": "on SOON network",
+        "environments": {
+          "rpc_endpoint": "",
+          "private_key": ""
+        },
+        "from_env_file": false // if true then you need to pass env variable name in "environments.<key>" values
+      }
+    ]
   }
 }

@@ -22,6 +22,7 @@ export interface IHotProfileBody {
 }
 
 export interface ITweetBody {
+  tools_catch_phrase: string; // catch phrase which will enable tools like sendai, launch ai agent etc
   metadata: {
     twitter_handle: string;
     tg_handle?: string;
@@ -38,6 +39,7 @@ export interface ITweetBody {
 export interface IMentionBody {
   prompt: string;
   mentioned_handle: string;
+  request: ITweetBody;
 }
 
 export interface INFTCollection {
@@ -48,4 +50,14 @@ export interface INFTCollection {
     address: string;
     percentage: number;
   }>;
+}
+
+export interface ISvmAgentKit {
+  name: string;
+  tweet_catch_phrase: string;
+  environments: {
+    rpc_endpoint: string;
+    private_key: string;
+  };
+  from_env_file: boolean;
 }
