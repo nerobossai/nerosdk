@@ -21,11 +21,14 @@ import { PublicKey } from "@solana/web3.js";
 
 const mentionsHourCheckReset = 0.02;
 
-export const verifyAndHandleTokenAirdropMentions = async (data: TweetV2) => {
+export const verifyAndHandleTokenAirdropMentions = async (
+  data: TweetV2,
+  request: IMentionBody
+) => {
   const text = data.text;
 
   try {
-    if (!text.toLowerCase().includes("under the rule of @nerobossai")) {
+    if (!text.toLowerCase().includes(request.request.tools_catch_phrase)) {
       logger.info("invalid token airdrop tweet");
       return {
         isCreated: false,
@@ -140,7 +143,7 @@ export const airdropTokensAndReply = async (data: IMentionBody) => {
             airdropCostEstimate,
             airdropCount,
             signature,
-          } = await verifyAndHandleTokenAirdropMentions(d);
+          } = await verifyAndHandleTokenAirdropMentions(d, data);
 
           if (isCreated) {
             const replyWorkerInput: IReplyBody = {

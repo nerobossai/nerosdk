@@ -21,11 +21,14 @@ const mentionsHourCheckReset = 0.02;
 
 const umi = createUmi(process.env.RPC_URL as string);
 
-export const verifyAndHandleNFTMentions = async (data: TweetV2) => {
+export const verifyAndHandleNFTMentions = async (
+  data: TweetV2,
+  request: IMentionBody
+) => {
   const text = data.text;
 
   try {
-    if (!text.toLowerCase().includes("under the rule of @nerobossai")) {
+    if (!text.toLowerCase().includes(request.request.tools_catch_phrase)) {
       logger.info("invalid NFT launch tweet");
       return {
         isCreated: false,
@@ -226,7 +229,7 @@ export const generateNFTCollectionAndReply = async (data: IMentionBody) => {
 
           // verify and handle airdrop mentions
           const { isCreated, userProfile, nftMetadata, isError } =
-            await verifyAndHandleNFTMentions(d);
+            await verifyAndHandleNFTMentions(d, data);
 
           if (isCreated) {
             const replyWorkerInput: IReplyBody = {

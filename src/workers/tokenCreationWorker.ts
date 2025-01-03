@@ -21,11 +21,14 @@ import { IMentionBody, IReplyBody } from "../utils/interfaces";
 
 const mentionsHourCheckReset = 0.02;
 
-export const verifyAndHandleTokenMentions = async (data: TweetV2) => {
+export const verifyAndHandleTokenMentions = async (
+  data: TweetV2,
+  request: IMentionBody
+) => {
   const text = data.text;
 
   try {
-    if (!text.toLowerCase().includes("under the rule of @nerobossai")) {
+    if (!text.toLowerCase().includes(request.request.tools_catch_phrase)) {
       logger.info("invalid token launch tweet");
       return {
         isCreated: false,
@@ -224,7 +227,7 @@ export const generateTokenAndReply = async (data: IMentionBody) => {
 
           // verify and handle airdrop mentions
           const { isCreated, mint, userProfile, pfp, tokenMetadata, isError } =
-            await verifyAndHandleTokenMentions(d);
+            await verifyAndHandleTokenMentions(d, data);
 
           if (isCreated) {
             const replyWorkerInput: IReplyBody = {

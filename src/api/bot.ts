@@ -42,12 +42,14 @@ router.post<{}>("/start", async (req, res, next) => {
     mentionsqueue.push({
       mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
       prompt: details.replies_prompt,
+      request: details,
     });
 
     // Create Token
     tokencreationqueue.push({
       mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
       prompt: details.replies_prompt,
+      request: details,
     });
 
     // create token using SENDAI solana-agent-ket
@@ -55,6 +57,7 @@ router.post<{}>("/start", async (req, res, next) => {
       deploytokenqueue.push({
         mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
         prompt: details.replies_prompt,
+        request: details,
       });
     }
 
@@ -63,6 +66,7 @@ router.post<{}>("/start", async (req, res, next) => {
       nftcreationqueue.push({
         mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
         prompt: details.replies_prompt,
+        request: details,
       });
     }
 
@@ -71,6 +75,7 @@ router.post<{}>("/start", async (req, res, next) => {
       tokenswapqueue.push({
         mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
         prompt: details.replies_prompt,
+        request: details,
       });
     }
 
@@ -79,6 +84,7 @@ router.post<{}>("/start", async (req, res, next) => {
       tokenlendqueue.push({
         mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
         prompt: details.replies_prompt,
+        request: details,
       });
     }
 
@@ -87,6 +93,7 @@ router.post<{}>("/start", async (req, res, next) => {
       solstakequeue.push({
         mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
         prompt: details.replies_prompt,
+        request: details,
       });
     }
 
@@ -95,6 +102,7 @@ router.post<{}>("/start", async (req, res, next) => {
       fetchtokenpricequeue.push({
         mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
         prompt: details.replies_prompt,
+        request: details,
       });
     }
 
@@ -103,6 +111,7 @@ router.post<{}>("/start", async (req, res, next) => {
       tokenairdropqueue.push({
         mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
         prompt: details.replies_prompt,
+        request: details,
       });
     }
 
