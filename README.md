@@ -110,8 +110,6 @@ You can add svm support by configuring it inside "svm" block of start request
 
 1. **SOON**: https://soo.network/
 
-You can toggle features you want to enable for your AI agent in the "sendai" block of start request
-
 ## Contributing
 
 We welcome contributions to the `nerosdk` project! Whether it's improving documentation, fixing bugs, or developing new features, your input is valuable. Please submit pull requests or open issues in the GitHub repository.
