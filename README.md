@@ -12,7 +12,8 @@
 4. **Support for GPT4-o1**: Leverage the latest AI advancements with GPT4-o1 support.
 5. **Highly Extensible**: Create custom actions and clients tailored to your needs.
 6. **Send AI Support**: Connect any AI Agents to Solana Protocols.
-7. **Just Works!**: Built to work out of the box.
+7. **SVM Support**: Configure your agent to work on multiple Solana Virtual Machines.
+8. **Just Works!**: Built to work out of the box.
 
 ## 🎯 Use Cases
 
