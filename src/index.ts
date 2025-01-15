@@ -3,6 +3,7 @@ import app from "./app";
 import { logger } from "./logger";
 import { cacheClient } from "./storage/redis";
 import {
+  resetGithubLimitJob,
   resetHotProfilesLimitJob,
   resetLimitJob,
   resetMentionsLimitJob,
@@ -19,6 +20,7 @@ resetHotProfilesLimitJob();
 resetMentionsLimitJob();
 resetTokenCreationLimitJob();
 resetPriorityReplyLimitJob();
+resetGithubLimitJob();
 
 // event listner on connect
 cacheClient.on("connect", function () {
