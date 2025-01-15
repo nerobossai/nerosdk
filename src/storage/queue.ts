@@ -20,6 +20,7 @@ import { fetchTokenPriceWorker } from "../workers/fetchTokenPrice";
 import { tokenAirdropWorker } from "../workers/tokenAirdropWorker";
 import { tokenLendingWorker } from "../workers/tokenLendWorker";
 import { TokenDeployWorker } from "../workers/deployToken";
+import { githubWorker } from "../workers/githubWorker";
 
 // create queue
 export const replyqueue: queue<IReplyBody> = fastq.promise(replyWorker, 1);
@@ -78,5 +79,10 @@ export const fetchtokenpricequeue: queue<IMentionBody> = fastq.promise(
 
 export const tokenairdropqueue: queue<IMentionBody> = fastq.promise(
   tokenAirdropWorker,
+  1
+);
+
+export const githubcreationqueue: queue<ITweetBody> = fastq.promise(
+  githubWorker,
   1
 );

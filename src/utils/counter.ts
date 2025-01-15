@@ -34,3 +34,4 @@ export const SOLStakingCounter = new Counter(MENTIONS_WINDOW);
 export const NFTCreationCounter = new Counter(MENTIONS_WINDOW);
 export const fetchTokenPriceCounter = new Counter(MENTIONS_WINDOW);
 export const tokenAirdropCounter = new Counter(MENTIONS_WINDOW);
+export const githubCounter = new Counter(MENTIONS_WINDOW);

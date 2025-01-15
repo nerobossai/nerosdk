@@ -27,6 +27,14 @@ export interface ITweetBody {
     twitter_handle: string;
     tg_handle?: string;
   };
+  github_config?: {
+    owner: string;
+    repo_link: string;
+    repo_name: string;
+    available_tags: string[];
+    auth_token: string;
+    from_env: boolean;
+  };
   uniqueid: string;
   prompt: [string];
   news_prompt: [string];
