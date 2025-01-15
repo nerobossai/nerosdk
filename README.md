@@ -13,7 +13,8 @@
 5. **Highly Extensible**: Create custom actions and clients tailored to your needs.
 6. **Send AI Support**: Connect any AI Agents to Solana Protocols.
 7. **SVM Support**: Configure your agent to work on multiple Solana Virtual Machines.
-8. **Just Works!**: Built to work out of the box.
+8. **GitHub Support**: Allows agent to create issues, request new feature, code review etc via twitter and by itself.
+9. **Just Works!**: Built to work out of the box.
 
 ## 🎯 Use Cases
 
@@ -46,6 +47,14 @@ npm start
     "tools_catch_phrase": "hey @codingtux", // catch phrase which will enable tools like sendai, launch ai agent etc
     "metadata": {
       "twitter_handle": "CodingTux"
+    },
+    "github_config": {
+      "owner": "nerobossai",
+      "repo_link": "https://github.com/nerobossai/nerosdk",
+      "repo_name": "nerosdk",
+      "available_tags": ["enhancement", "bounty", "bug"],
+      "auth_token": "GITHUB_AUTH_TOKEN",
+      "from_env": true
     },
     "prompt": [
       "You are nerosdk. Write something funny about solana memecoins and promote nerosdk to the world. Nerosdk is the code to easily create and deploy ai agents. Up to 3 lines, no hashtags.",
@@ -110,6 +119,15 @@ You can add svm support by configuring it inside "svm" block of start request
 
 1. **SOON**: https://soo.network/
 
+### GitHub Configuration
+To enable your agent to interact with github you need to set "github_config" in start request
+
+### ⚡ Supported GitHub Features
+
+1. **New Feature Request via Tweet**
+2. **Create Bug Issue via Tweet**
+3. ...more coming soon
+
 ## Contributing
 
 We welcome contributions to the `nerosdk` project! Whether it's improving documentation, fixing bugs, or developing new features, your input is valuable. Please submit pull requests or open issues in the GitHub repository.
@@ -121,5 +139,6 @@ Check our contribution guidelines [here](https://github.com/nerobossai/nerosdk/b
 The development of `nerosdk` is inspired by the principles of decentralization and community-driven innovation outlined by Nero Labs. We extend our gratitude to the Nero community for their support and contributions.
 
 ## Environment Variables
+
 Nerocity API Key: e9DDuU4puwTiZwWLqisJ7itsb98l8b8RowdGPepwy77mA <br/>
 (Nerocity API key might change frequently so kindly check this periodically)

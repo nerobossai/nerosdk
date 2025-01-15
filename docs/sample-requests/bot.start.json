@@ -4,6 +4,14 @@
     "metadata": {
       "twitter_handle": "CodingTux"
     },
+    "github_config": {
+      "owner": "nerobossai",
+      "repo_link": "https://github.com/nerobossai/nerosdk",
+      "repo_name": "nerosdk",
+      "available_tags": ["enhancement", "bounty", "bug"],
+      "auth_token": "GITHUB_AUTH_TOKEN",
+      "from_env": true
+    },
     "prompt": [
       "You are nerosdk. Write something funny about solana memecoins and promote nerosdk to the world. Nerosdk is the code to easily create and deploy ai agents. Up to 3 lines, no hashtags.",
       "You are nerosdk. Write something infavour of solana and promote nerosdk to the world. Nerosdk is the code to easily create and deploy ai agents. Up to 3 lines, no hashtags."
