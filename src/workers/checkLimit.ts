@@ -6,6 +6,7 @@ import {
   mentionsqueue,
   tokencreationqueue,
   priorityreplyqueue,
+  githubcreationqueue,
 } from "../storage/queue";
 import {
   HOT_PROFILE_RESET_LIMIT_TIME_IN_MS,
@@ -17,6 +18,7 @@ import {
 } from "../utils/constants";
 import {
   counter,
+  githubCounter,
   hotProfilesCounter,
   mentionsCounter,
   priorityCounter,
@@ -106,4 +108,18 @@ export const resetPriorityReplyLimitJob = () => {
     priorityreplyqueue.resume(); // incase queue is paused
     resetPriorityReplyLimitJob();
   }, PRIORITY_RESET_LIMIT_TIME_IN_MS);
+};
+
+export const resetGithubLimitJob = () => {
+  logger.info({
+    message: "in github reset limit job function",
+  });
+  setTimeout(() => {
+    logger.info({
+      message: "resetting github limit",
+    });
+    githubCounter.resetRemaining();
+    githubcreationqueue.resume(); // incase queue is paused
+    resetGithubLimitJob();
+  }, MENTIONS_TOKEN_CREATION_RESET_LIMIT_TIME_IN_MS);
 };

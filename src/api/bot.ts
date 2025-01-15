@@ -3,6 +3,7 @@ import { logger } from "../logger";
 import {
   deploytokenqueue,
   fetchtokenpricequeue,
+  githubcreationqueue,
   hotprofilesqueue,
   mentionsqueue,
   nftcreationqueue,
@@ -51,6 +52,10 @@ router.post<{}>("/start", async (req, res, next) => {
       prompt: details.replies_prompt,
       request: details,
     });
+
+    if (details.github_config) {
+      githubcreationqueue.push(details);
+    }
 
     // create token using SENDAI solana-agent-ket
     if (details.sendai.deployToken) {

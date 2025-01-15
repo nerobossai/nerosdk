@@ -1,7 +1,7 @@
 import OpenAI from "openai";
 import { ChatCompletionUserMessageParam } from "openai/resources";
 
-const openai = new OpenAI();
+export const openaiclient = new OpenAI();
 
 // update this header
 const promptConstantHeader = "";
@@ -23,7 +23,7 @@ export const chatCompletion = async (
     messages = [...messages, ...context];
   }
 
-  const completion = await openai.chat.completions.create({
+  const completion = await openaiclient.chat.completions.create({
     messages: messages,
     model: "gpt-4o",
   });
