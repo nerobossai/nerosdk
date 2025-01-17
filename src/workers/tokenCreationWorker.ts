@@ -19,7 +19,7 @@ import axios from "axios";
 import { Blob } from "formdata-node";
 import { IMentionBody, IReplyBody } from "../utils/interfaces";
 
-const mentionsHourCheckReset = 0.02;
+const mentionsHourCheckReset = 0.1;
 
 export const verifyAndHandleTokenMentions = async (
   data: TweetV2,
