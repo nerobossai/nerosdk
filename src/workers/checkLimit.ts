@@ -7,6 +7,13 @@ import {
   tokencreationqueue,
   priorityreplyqueue,
   githubcreationqueue,
+  deploytokenqueue,
+  tokenswapqueue,
+  tokenlendqueue,
+  solstakequeue,
+  nftcreationqueue,
+  fetchtokenpricequeue,
+  tokenairdropqueue,
 } from "../storage/queue";
 import {
   HOT_PROFILE_RESET_LIMIT_TIME_IN_MS,
@@ -18,11 +25,18 @@ import {
 } from "../utils/constants";
 import {
   counter,
+  fetchTokenPriceCounter,
   githubCounter,
   hotProfilesCounter,
   mentionsCounter,
+  NFTCreationCounter,
   priorityCounter,
+  SOLStakingCounter,
+  tokenAirdropCounter,
   tokenCreationCounter,
+  tokenDeployCounter,
+  tokenLendingCounter,
+  tokenSwapCounter,
   tweetCounter,
 } from "../utils/counter";
 
@@ -123,3 +137,102 @@ export const resetGithubLimitJob = () => {
     resetGithubLimitJob();
   }, MENTIONS_TOKEN_CREATION_RESET_LIMIT_TIME_IN_MS);
 };
+
+export const resetTokenDeployLimitJob = () => {
+  logger.info({
+    message: "in token deploy reset limit job function",
+  });
+  setTimeout(() => {
+    logger.info({
+      message: "resetting token deploy limit",
+    });
+    tokenDeployCounter.resetRemaining();
+    deploytokenqueue.resume(); // incase queue is paused
+    resetTokenDeployLimitJob();
+  }, MENTIONS_TOKEN_CREATION_RESET_LIMIT_TIME_IN_MS);
+};
+
+export const resetSwapLimitJob = () => {
+  logger.info({
+    message: "in token swap reset limit job function",
+  });
+  setTimeout(() => {
+    logger.info({
+      message: "resetting token swap limit",
+    });
+    tokenSwapCounter.resetRemaining();
+    tokenswapqueue.resume(); // incase queue is paused
+    resetSwapLimitJob();
+  }, MENTIONS_TOKEN_CREATION_RESET_LIMIT_TIME_IN_MS);
+};
+
+export const resetLendingLimitJob = () => {
+  logger.info({
+    message: "in token lending reset limit job function",
+  });
+  setTimeout(() => {
+    logger.info({
+      message: "resetting token lending limit",
+    });
+    tokenLendingCounter.resetRemaining();
+    tokenlendqueue.resume(); // incase queue is paused
+    resetLendingLimitJob();
+  }, MENTIONS_TOKEN_CREATION_RESET_LIMIT_TIME_IN_MS);
+};
+
+export const resetSolStakingLimitJob = () => {
+  logger.info({
+    message: "in sol staking reset limit job function",
+  });
+  setTimeout(() => {
+    logger.info({
+      message: "resetting sol staking limit",
+    });
+    SOLStakingCounter.resetRemaining();
+    solstakequeue.resume(); // incase queue is paused
+    resetSolStakingLimitJob();
+  }, MENTIONS_TOKEN_CREATION_RESET_LIMIT_TIME_IN_MS);
+};
+
+export const resetNFTCreationLimitJob = () => {
+  logger.info({
+    message: "in nft creation reset limit job function",
+  });
+  setTimeout(() => {
+    logger.info({
+      message: "resetting nft creation limit",
+    });
+    NFTCreationCounter.resetRemaining();
+    nftcreationqueue.resume(); // incase queue is paused
+    resetNFTCreationLimitJob();
+  }, MENTIONS_TOKEN_CREATION_RESET_LIMIT_TIME_IN_MS);
+};
+
+export const resetTokenPriceFetchLimitJob = () => {
+  logger.info({
+    message: "in reset token price fetch limit job function",
+  });
+  setTimeout(() => {
+    logger.info({
+      message: "resetting token price fetch limit",
+    });
+    fetchTokenPriceCounter.resetRemaining();
+    fetchtokenpricequeue.resume(); // incase queue is paused
+    resetTokenPriceFetchLimitJob();
+  }, MENTIONS_TOKEN_CREATION_RESET_LIMIT_TIME_IN_MS);
+};
+
+export const resetTokenAirdropLimitJob = () => {
+  logger.info({
+    message: "in reset token airdrop limit job function",
+  });
+  setTimeout(() => {
+    logger.info({
+      message: "resetting token airdrop fetch limit",
+    });
+    tokenAirdropCounter.resetRemaining();
+    tokenairdropqueue.resume(); // incase queue is paused
+    resetTokenAirdropLimitJob();
+  }, MENTIONS_TOKEN_CREATION_RESET_LIMIT_TIME_IN_MS);
+};
+
