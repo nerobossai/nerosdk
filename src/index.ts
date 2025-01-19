@@ -5,10 +5,16 @@ import { cacheClient } from "./storage/redis";
 import {
   resetGithubLimitJob,
   resetHotProfilesLimitJob,
+  resetLendingLimitJob,
   resetLimitJob,
   resetMentionsLimitJob,
+  resetNFTCreationLimitJob,
   resetPriorityReplyLimitJob,
+  resetSolStakingLimitJob,
+  resetSwapLimitJob,
+  resetTokenAirdropLimitJob,
   resetTokenCreationLimitJob,
+  resetTokenDeployLimitJob,
   resetTweetLimitJob,
 } from "./workers/checkLimit";
 
@@ -21,6 +27,12 @@ resetMentionsLimitJob();
 resetTokenCreationLimitJob();
 resetPriorityReplyLimitJob();
 resetGithubLimitJob();
+resetTokenDeployLimitJob();
+resetSwapLimitJob();
+resetLendingLimitJob();
+resetSolStakingLimitJob();
+resetNFTCreationLimitJob();
+resetTokenAirdropLimitJob();
 
 // event listner on connect
 cacheClient.on("connect", function () {
