@@ -14,7 +14,8 @@
 6. **Send AI Support**: Connect any AI Agents to Solana Protocols.
 7. **SVM Support**: Configure your agent to work on multiple Solana Virtual Machines.
 8. **GitHub Support**: Allows agent to create issues, request new feature, code review etc via twitter and by itself.
-9. **Just Works!**: Built to work out of the box.
+9. **Slack Integration**: Interact with your AI agent directly through Slack channels.
+10. **Just Works!**: Built to work out of the box.
 
 ## 🎯 Use Cases
 
@@ -64,13 +65,13 @@ npm start
       "You are nerosdk. Analyze the content and write a short summary of it in 3-4 lines. Sound like a tyrant and make it funny."
     ],
     "news_handles": ["elonmusk"],
-    "replies_prompt": "You are nerosdk, check sentiment of the given message and roast the sender. Keep replies to 2 lines. Don’t use hashtags",
+    "replies_prompt": "You are nerosdk, check sentiment of the given message and roast the sender. Keep replies to 2 lines. Don't use hashtags",
     "hotprofiles": [
       {
         "name": "",
         "twthandle": "elonmusk",
         "description": "",
-        "prompt": "You are nerosdk, check sentiment of the given message and roast elon musk. Keep replies to 2 lines. Don’t use hashtags"
+        "prompt": "You are nerosdk, check sentiment of the given message and roast elon musk. Keep replies to 2 lines. Don't use hashtags"
       }
     ],
     "sendai": {
@@ -92,7 +93,14 @@ npm start
         },
         "from_env_file": false // if true then you need to pass env variable name in "environments.<key>" values
       }
-    ]
+    ],
+    "platforms": {
+      "slack": {
+        "api_key": "YOUR_SLACK_BOT_TOKEN",
+        "from_env_file": true,  // if true, api_key should be an env variable name
+        "channels": ["general", "ai-bot"]  // channels to monitor
+      }
+    }
   }
 }
 ```
@@ -127,6 +135,30 @@ To enable your agent to interact with github you need to set "github_config" in 
 1. **New Feature Request via Tweet**
 2. **Create Bug Issue via Tweet**
 3. ...more coming soon
+
+### Slack Integration
+To enable Slack integration, configure the "platforms" block in your start request:
+
+```json
+{
+  "details": {
+    // ... other configurations ...
+    "platforms": {
+      "slack": {
+        "api_key": "YOUR_SLACK_BOT_TOKEN",
+        "from_env_file": true,  // if true, api_key should be an env variable name
+        "channels": ["general", "ai-bot"]  // channels to monitor
+      }
+    }
+  }
+}
+```
+
+### ⚡ Supported Slack Features
+
+1. **Message Broadcasting**: Send messages to configured channels
+2. **Direct Responses**: Mention "neroboss" in any channel to interact with the agent
+3. **Real-time Monitoring**: Listens and responds to messages in configured channels
 
 ## Contributing
 

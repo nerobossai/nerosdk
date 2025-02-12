@@ -48,6 +48,13 @@
         },
         "from_env_file": false // if true then you need to pass env variable name in "environments.<key>" values
       }
-    ]
+    ],
+    "platforms": {
+      "slack": {
+        "api_key": "",
+        "from_env_file": false,  // if true then you need to pass env variable name in "slack.api_key",
+        "channels": []
+      }
+    }
   }
 }
