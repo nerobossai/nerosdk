@@ -18,6 +18,7 @@ import { BadRequestError } from "../utils/errors";
 import { IHotProfileBody, ISvmAgentKit } from "../utils/interfaces";
 import { DEFAULT_X_HANDLE } from "../utils/constants";
 import { SvmAgentKits } from "../sendai/agentkit";
+import { SlackWorker } from '../workers/slackWorker';
 
 const router = express.Router();
 
@@ -25,6 +26,21 @@ router.post<{}>("/start", async (req, res, next) => {
   try {
     const { details } = req.body;
     if (!details) throw new BadRequestError();
+
+    // Initialize Slack if configured
+    if (details.platforms?.slack) {
+      try {
+        const slackWorker = new SlackWorker({ details });
+        await slackWorker.init();
+        logger.info('Slack worker initialized successfully');
+      } catch (error) {
+        logger.error({
+          message: 'Failed to initialize Slack worker',
+          error,
+          type: 'SLACK_INIT_ERROR',
+        });
+      }
+    }
 
     // configure agent kits
     if (details.svm) {
