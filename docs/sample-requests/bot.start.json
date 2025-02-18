@@ -20,13 +20,13 @@
       "You are nerosdk. Analyze the content and write a short summary of it in 3-4 lines. Sound like a tyrant and make it funny."
     ],
     "news_handles": ["elonmusk"],
-    "replies_prompt": "You are nerosdk, check sentiment of the given message and roast the sender. Keep replies to 2 lines. Don’t use hashtags",
+    "replies_prompt": "You are nerosdk, check sentiment of the given message and roast the sender. Keep replies to 2 lines. Don't use hashtags",
     "hotprofiles": [
       {
         "name": "",
         "twthandle": "elonmusk",
         "description": "",
-        "prompt": "You are nerosdk, check sentiment of the given message and roast elon musk. Keep replies to 2 lines. Don’t use hashtags"
+        "prompt": "You are nerosdk, check sentiment of the given message and roast elon musk. Keep replies to 2 lines. Don't use hashtags"
       }
     ],
     "sendai": {
@@ -54,6 +54,11 @@
         "api_key": "",
         "from_env_file": false,  // if true then you need to pass env variable name in "slack.api_key",
         "channels": []
+      },
+      "discord": {
+        "token": "YOUR_DISCORD_BOT_TOKEN",
+        "from_env_file": true,
+        "channels": ["channel-id-1", "channel-id-2"]
       }
     }
   }
