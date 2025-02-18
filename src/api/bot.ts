@@ -19,6 +19,7 @@ import { IHotProfileBody, ISvmAgentKit } from "../utils/interfaces";
 import { DEFAULT_X_HANDLE } from "../utils/constants";
 import { SvmAgentKits } from "../sendai/agentkit";
 import { SlackWorker } from '../workers/slackWorker';
+import { DiscordWorker } from '../workers/discordWorker';
 
 const router = express.Router();
 
@@ -38,6 +39,21 @@ router.post<{}>("/start", async (req, res, next) => {
           message: 'Failed to initialize Slack worker',
           error,
           type: 'SLACK_INIT_ERROR',
+        });
+      }
+    }
+
+    // Initialize Discord if configured
+    if (details.platforms?.discord) {
+      try {
+        const discordWorker = new DiscordWorker({ details });
+        await discordWorker.init();
+        logger.info('Discord worker initialized successfully');
+      } catch (error) {
+        logger.error({
+          message: 'Failed to initialize Discord worker',
+          error,
+          type: 'DISCORD_INIT_ERROR',
         });
       }
     }
