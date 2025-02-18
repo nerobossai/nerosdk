@@ -4,8 +4,15 @@ export interface SlackConfig {
     channels: string[];
 }
 
+export interface DiscordConfig {
+    token: string;
+    from_env_file: boolean;
+    channels: string[];
+}
+
 export interface Platforms {
     slack?: SlackConfig;
+    discord?: DiscordConfig;
 }
 
 // Add to your existing BotConfig interface:
