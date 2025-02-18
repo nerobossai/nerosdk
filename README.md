@@ -15,7 +15,8 @@
 7. **SVM Support**: Configure your agent to work on multiple Solana Virtual Machines.
 8. **GitHub Support**: Allows agent to create issues, request new feature, code review etc via twitter and by itself.
 9. **Slack Integration**: Interact with your AI agent directly through Slack channels.
-10. **Just Works!**: Built to work out of the box.
+10. **Discord Integration**: Chat with your AI agent in Discord servers and channels.
+11. **Just Works!**: Built to work out of the box.
 
 ## 🎯 Use Cases
 
@@ -159,6 +160,40 @@ To enable Slack integration, configure the "platforms" block in your start reque
 1. **Message Broadcasting**: Send messages to configured channels
 2. **Direct Responses**: Mention "neroboss" in any channel to interact with the agent
 3. **Real-time Monitoring**: Listens and responds to messages in configured channels
+
+### Discord Integration
+To enable Discord integration, configure the "platforms" block in your start request:
+
+```json
+{
+  "details": {
+    // ... other configurations ...
+    "platforms": {
+      "discord": {
+        "token": "YOUR_DISCORD_BOT_TOKEN",
+        "from_env_file": true,  // if true, token should be an env variable name
+        "channels": ["channel-id-1", "channel-id-2"]  // channel IDs to monitor
+      }
+    }
+  }
+}
+```
+
+### ⚡ Supported Discord Features
+
+1. **Message Broadcasting**: Send messages to configured channels
+2. **Direct Responses**: Mention "neroboss" in any channel to interact with the agent
+3. **Real-time Monitoring**: Listens and responds to messages in configured channels
+
+#### Discord Setup Steps
+1. Create a Discord application in the [Discord Developer Portal](https://discord.com/developers/applications)
+2. Create a bot for your application and get the bot token
+3. Enable the following Privileged Gateway Intents:
+   - Message Content Intent
+   - Server Members Intent
+   - Presence Intent
+4. Invite the bot to your server with proper permissions
+5. Use channel IDs in the configuration (Enable Developer Mode in Discord to copy channel IDs)
 
 ## Contributing
 
