@@ -10,9 +10,16 @@ export interface DiscordConfig {
     channels: string[];
 }
 
+export interface AlexaConfig {
+    invocation_name: string;
+    skill_id: string;
+    from_env_file: boolean;
+}
+
 export interface Platforms {
     slack?: SlackConfig;
     discord?: DiscordConfig;
+    alexa?: AlexaConfig;
 }
 
 // Add to your existing BotConfig interface:
