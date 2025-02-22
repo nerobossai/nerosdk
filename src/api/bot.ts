@@ -20,6 +20,7 @@ import { DEFAULT_X_HANDLE } from "../utils/constants";
 import { SvmAgentKits } from "../sendai/agentkit";
 import { SlackWorker } from '../workers/slackWorker';
 import { DiscordWorker } from '../workers/discordWorker';
+import { AlexaWorker } from '../workers/alexaWorker';
 
 const router = express.Router();
 
@@ -54,6 +55,21 @@ router.post<{}>("/start", async (req, res, next) => {
           message: 'Failed to initialize Discord worker',
           error,
           type: 'DISCORD_INIT_ERROR',
+        });
+      }
+    }
+
+    // Initialize Alexa if configured
+    if (details.platforms?.alexa) {
+      try {
+        const alexaWorker = new AlexaWorker({ details });
+        await alexaWorker.init();
+        logger.info('Alexa worker initialized successfully');
+      } catch (error) {
+        logger.error({
+          message: 'Failed to initialize Alexa worker',
+          error,
+          type: 'ALEXA_INIT_ERROR',
         });
       }
     }

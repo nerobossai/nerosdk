@@ -59,6 +59,11 @@
         "token": "YOUR_DISCORD_BOT_TOKEN",
         "from_env_file": true,
         "channels": ["channel-id-1", "channel-id-2"]
+      },
+      "alexa": {
+        "invocation_name": "nero boss",
+        "skill_id": "YOUR_SKILL_ID",
+        "from_env_file": true
       }
     }
   }

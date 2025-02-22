@@ -17,6 +17,7 @@
 9. **Slack Integration**: Interact with your AI agent directly through Slack channels.
 10. **Discord Integration**: Chat with your AI agent in Discord servers and channels.
 11. **Just Works!**: Built to work out of the box.
+12. **Alexa Integration**: Talk to your AI agent through Alexa devices.
 
 ## 🎯 Use Cases
 
@@ -194,6 +195,36 @@ To enable Discord integration, configure the "platforms" block in your start req
    - Presence Intent
 4. Invite the bot to your server with proper permissions
 5. Use channel IDs in the configuration (Enable Developer Mode in Discord to copy channel IDs)
+
+### Alexa Integration
+To enable Alexa integration, configure the "platforms" block in your start request:
+
+```json
+{
+  "details": {
+    "platforms": {
+      "alexa": {
+        "invocation_name": "nero boss",
+        "skill_id": "YOUR_SKILL_ID",
+        "from_env_file": true
+      }
+    }
+  }
+}
+```
+
+### ⚡ Supported Alexa Features
+
+1. **Voice Interaction**: Talk to your AI agent through Alexa devices
+2. **Natural Conversations**: Ask questions and get AI-powered responses
+3. **Custom Invocation**: Configure your own wake phrase (default: "nero boss")
+
+#### Alexa Setup Steps
+1. Create a new Alexa Skill in the [Alexa Developer Console](https://developer.amazon.com/alexa/console/ask)
+2. Set up the interaction model with the invocation name
+3. Configure the NeroIntent with sample utterances
+4. Deploy the skill to your Alexa devices
+5. Use "Alexa, ask nero boss..." to interact with your agent
 
 ## Contributing
 
