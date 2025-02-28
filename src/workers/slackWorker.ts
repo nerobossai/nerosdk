@@ -1,11 +1,15 @@
 import { WebClient, LogLevel } from '@slack/web-api';
 import { RTMClient } from '@slack/rtm-api';
 import { BotConfig } from '../types/config';
+import { chatCompletion, ModelType } from '../services/gpt';
 
 export class SlackWorker {
     private webClient: WebClient;
     private rtmClient: RTMClient;
     private channels: string[];
+    private xaiConfig?: { api_key: string };
+    private openaiConfig?: { api_key: string };
+    private model: ModelType;
 
     constructor(config: BotConfig) {
         const slackConfig = config.details.platforms?.slack;
@@ -28,6 +32,17 @@ export class SlackWorker {
         this.rtmClient = new RTMClient(apiKey);
         this.channels = slackConfig.channels || [];
         
+        // Store AI configurations
+        this.xaiConfig = config.details.xai_config?.from_env_file
+            ? { api_key: process.env[config.details.xai_config.api_key] || '' }
+            : { api_key: config.details.xai_config?.api_key || '' };
+
+        this.openaiConfig = config.details.openai_config?.from_env_file
+            ? { api_key: process.env[config.details.openai_config.api_key] || '' }
+            : { api_key: config.details.openai_config?.api_key || '' };
+
+        this.model = config.details.model || 'gpt-4o';
+        
         // Setup message handler
         this.setupMessageHandler();
     }
@@ -47,9 +62,19 @@ export class SlackWorker {
     }
 
     private async generateResponse(message: string): Promise<string> {
-        // Here you can implement your custom logic to generate responses
-        // For now, returning a simple response
-        return `Hey there! 👋 I noticed you mentioned me. How can I help you today?`;
+        try {
+            const completion = await chatCompletion(
+                "You are nerosdk, an AI assistant. Respond helpfully but with personality. Keep responses concise:", 
+                [{ role: "user", content: message }],
+                this.model,
+                this.model === "grok-3" ? this.xaiConfig : undefined,
+                this.openaiConfig
+            );
+            return completion.message.content || "I'm having trouble processing that request.";
+        } catch (error) {
+            console.error('Error generating response:', error);
+            return "I encountered an error while processing your request.";
+        }
     }
 
     /**

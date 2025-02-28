@@ -1,10 +1,14 @@
+// @ts-ignore
 import { Client, GatewayIntentBits, TextChannel, Message } from 'discord.js';
 import { BotConfig } from '../types/config';
-import { chatCompletion } from '../services/gpt';
+import { chatCompletion, ModelType } from '../services/gpt';
 
 export class DiscordWorker {
     private client: Client;
     private channels: string[];
+    private xaiConfig?: { api_key: string };
+    private openaiConfig?: { api_key: string };
+    private model: ModelType;
 
     constructor(config: BotConfig) {
         const discordConfig = config.details.platforms?.discord;
@@ -20,6 +24,17 @@ export class DiscordWorker {
         if (!token) {
             throw new Error('Discord token is not configured');
         }
+
+        // Store AI configurations
+        this.xaiConfig = config.details.xai_config?.from_env_file
+            ? { api_key: process.env[config.details.xai_config.api_key] || '' }
+            : { api_key: config.details.xai_config?.api_key || '' };
+
+        this.openaiConfig = config.details.openai_config?.from_env_file
+            ? { api_key: process.env[config.details.openai_config.api_key] || '' }
+            : { api_key: config.details.openai_config?.api_key || '' };
+
+        this.model = config.details.model || 'gpt-4o';
 
         this.client = new Client({
             intents: [
@@ -52,17 +67,17 @@ export class DiscordWorker {
 
     private async generateResponse(message: string): Promise<string> {
         try {
-            const prompt = "You are nerosdk, an AI assistant. Analyze the following message and respond helpfully but with a bit of sass. Keep your response concise and engaging: ";
-            
-            const completion = await chatCompletion(prompt, [{
-                role: "user",
-                content: message
-            }]);
-
-            return completion.message.content || "Sorry, I'm having trouble thinking of a response right now!";
+            const completion = await chatCompletion(
+                "You are nerosdk, an AI assistant. Respond helpfully but with personality. Keep responses concise:", 
+                [{ role: "user", content: message }],
+                this.model,
+                this.model === "grok-3" ? this.xaiConfig : undefined,
+                this.openaiConfig
+            );
+            return completion.message.content || "I'm having trouble processing that request.";
         } catch (error) {
             console.error('Error generating response:', error);
-            return "Oops, my brain had a hiccup! Try asking me again in a moment.";
+            return "I encountered an error while processing your request.";
         }
     }
 

@@ -226,6 +226,53 @@ To enable Alexa integration, configure the "platforms" block in your start reque
 4. Deploy the skill to your Alexa devices
 5. Use "Alexa, ask nero boss..." to interact with your agent
 
+## AI Model Support
+
+nerosdk now supports multiple AI models:
+
+### OpenAI GPT
+The default model is `gpt-4o`. To use OpenAI's GPT model, configure your API key:
+
+```json
+{
+  "details": {
+    "model": "gpt-4o",
+    "openai_config": {
+      "api_key": "YOUR_OPENAI_API_KEY",
+      "from_env_file": true  // if true, api_key should be an env variable name
+    }
+  }
+}
+```
+
+### xAI Grok
+To use xAI's Grok-3 model, configure your request like this:
+
+```json
+{
+  "details": {
+    "model": "grok-3",
+    "xai_config": {
+      "api_key": "YOUR_XAI_API_KEY",
+      "from_env_file": true  // if true, api_key should be an env variable name
+    }
+  }
+}
+```
+
+### Environment Variables
+If using `from_env_file: true`, set your API keys in your .env file:
+```env
+OPENAI_API_KEY=sk-...
+XAI_API_KEY=xai-...
+```
+
+### Model Features
+- **GPT-4o**: Default model, great for general purpose AI interactions
+- **Grok-3**: xAI's model, offers unique personality and real-time knowledge
+
+You can switch between models by changing the `model` field in your request. The appropriate API key configuration must be provided for the selected model.
+
 ## Contributing
 
 We welcome contributions to the `nerosdk` project! Whether it's improving documentation, fixing bugs, or developing new features, your input is valuable. Please submit pull requests or open issues in the GitHub repository.

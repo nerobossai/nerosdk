@@ -65,6 +65,15 @@
         "skill_id": "YOUR_SKILL_ID",
         "from_env_file": true
       }
+    },
+    "model": "grok-3",
+    "xai_config": {
+      "api_key": "YOUR_XAI_API_KEY",
+      "from_env_file": true
+    },
+    "openai_config": {
+      "api_key": "YOUR_OPENAI_API_KEY",
+      "from_env_file": true
     }
   }
 }

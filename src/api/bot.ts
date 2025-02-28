@@ -21,6 +21,7 @@ import { SvmAgentKits } from "../sendai/agentkit";
 import { SlackWorker } from '../workers/slackWorker';
 import { DiscordWorker } from '../workers/discordWorker';
 import { AlexaWorker } from '../workers/alexaWorker';
+import { chatCompletion } from "../services/gpt";
 
 const router = express.Router();
 
@@ -81,8 +82,21 @@ router.post<{}>("/start", async (req, res, next) => {
       });
     }
 
-    // send request in internal queue
-    twtqueue.push(details);
+    const xaiConfig = details.xai_config?.from_env_file
+      ? { api_key: process.env[details.xai_config.api_key] || '' }
+      : { api_key: details.xai_config?.api_key || '' };
+
+    const openaiConfig = details.openai_config?.from_env_file
+      ? { api_key: process.env[details.openai_config.api_key] || '' }
+      : { api_key: details.openai_config?.api_key || '' };
+
+    // Update queue pushes with configs
+    twtqueue.push({
+      ...details,
+      xai_config: xaiConfig,
+      openai_config: openaiConfig
+    });
+
     hotprofilesqueue.pause();
     (details.hotprofiles || []).map((d: IHotProfileBody) => {
       hotprofilesqueue.push(d);
@@ -91,18 +105,30 @@ router.post<{}>("/start", async (req, res, next) => {
     mentionsqueue.push({
       mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
       prompt: details.replies_prompt,
-      request: details,
+      request: {
+        ...details,
+        xai_config: xaiConfig,
+        openai_config: openaiConfig
+      },
     });
 
     // Create Token
     tokencreationqueue.push({
       mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
       prompt: details.replies_prompt,
-      request: details,
+      request: {
+        ...details,
+        xai_config: xaiConfig,
+        openai_config: openaiConfig
+      },
     });
 
     if (details.github_config) {
-      githubcreationqueue.push(details);
+      githubcreationqueue.push({
+        ...details,
+        xai_config: xaiConfig,
+        openai_config: openaiConfig
+      });
     }
 
     // create token using SENDAI solana-agent-ket
@@ -110,7 +136,11 @@ router.post<{}>("/start", async (req, res, next) => {
       deploytokenqueue.push({
         mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
         prompt: details.replies_prompt,
-        request: details,
+        request: {
+          ...details,
+          xai_config: xaiConfig,
+          openai_config: openaiConfig
+        },
       });
     }
 
@@ -119,7 +149,11 @@ router.post<{}>("/start", async (req, res, next) => {
       nftcreationqueue.push({
         mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
         prompt: details.replies_prompt,
-        request: details,
+        request: {
+          ...details,
+          xai_config: xaiConfig,
+          openai_config: openaiConfig
+        },
       });
     }
 
@@ -128,7 +162,11 @@ router.post<{}>("/start", async (req, res, next) => {
       tokenswapqueue.push({
         mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
         prompt: details.replies_prompt,
-        request: details,
+        request: {
+          ...details,
+          xai_config: xaiConfig,
+          openai_config: openaiConfig
+        },
       });
     }
 
@@ -137,7 +175,11 @@ router.post<{}>("/start", async (req, res, next) => {
       tokenlendqueue.push({
         mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
         prompt: details.replies_prompt,
-        request: details,
+        request: {
+          ...details,
+          xai_config: xaiConfig,
+          openai_config: openaiConfig
+        },
       });
     }
 
@@ -146,7 +188,11 @@ router.post<{}>("/start", async (req, res, next) => {
       solstakequeue.push({
         mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
         prompt: details.replies_prompt,
-        request: details,
+        request: {
+          ...details,
+          xai_config: xaiConfig,
+          openai_config: openaiConfig
+        },
       });
     }
 
@@ -155,7 +201,11 @@ router.post<{}>("/start", async (req, res, next) => {
       fetchtokenpricequeue.push({
         mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
         prompt: details.replies_prompt,
-        request: details,
+        request: {
+          ...details,
+          xai_config: xaiConfig,
+          openai_config: openaiConfig
+        },
       });
     }
 
@@ -164,7 +214,11 @@ router.post<{}>("/start", async (req, res, next) => {
       tokenairdropqueue.push({
         mentioned_handle: details?.metadata?.twitter_handle || DEFAULT_X_HANDLE,
         prompt: details.replies_prompt,
-        request: details,
+        request: {
+          ...details,
+          xai_config: xaiConfig,
+          openai_config: openaiConfig
+        },
       });
     }
 

@@ -1,4 +1,4 @@
-import { chatCompletion } from "../services/gpt";
+import { chatCompletion, ModelType } from "../services/gpt";
 import { logger } from "../logger";
 import { twtqueue } from "../storage/queue";
 import { tweetCounter } from "../utils/counter";
@@ -13,10 +13,17 @@ const newsUsername = "XNews";
 
 const tweetHourCheckReset = 2.5;
 
+interface TweetWorkerConfig {
+  model: ModelType;
+  xaiConfig?: { api_key: string };
+  openaiConfig?: { api_key: string };
+}
+
 export const generateAndTweet = async (
   prompt: string,
   newsPrompt: string,
-  newsHandles?: string[]
+  newsHandles?: string[],
+  config?: TweetWorkerConfig
 ) => {
   try {
     const lastTweetTimeCache = getCacheKey(`lasttweettime`);
@@ -70,20 +77,26 @@ export const generateAndTweet = async (
       }
 
       // compile tweet -> boom!
-      gptResponse = await chatCompletion(newsPrompt, [
-        {
-          content: newsContent,
-          role: "user",
-        },
-      ]);
+      gptResponse = (await chatCompletion(
+        newsPrompt,
+        [{ content: newsContent, role: "user" }],
+        config?.model || "gpt-4o",
+        config?.model === "grok-3" ? config?.xaiConfig : undefined,
+        config?.openaiConfig
+      )) as ChatCompletion.Choice;
 
       await cacheClient.set(newsCacheKey, Date.now().toString());
     } else {
-      gptResponse = await chatCompletion(prompt);
+      gptResponse = (await chatCompletion(
+        prompt,
+        undefined,
+        config?.model || "gpt-4o",
+        config?.model === "grok-3" ? config?.xaiConfig : undefined,
+        config?.openaiConfig
+      )) as ChatCompletion.Choice;
     }
 
-    gptResponse = await chatCompletion(prompt);
-    const tweet = gptResponse.message.content || "hello world!";
+    const tweet = gptResponse.message?.content || "hello world!";
 
     const res = await twitterClient.v2.tweet(tweet);
     await cacheClient.set(lastTweetTimeCache, Date.now().toString());
@@ -98,10 +111,17 @@ export const tweetWorker = async (data: ITweetBody) => {
     data,
   });
 
+  const config = {
+    model: data.model || "gpt-4o",
+    xaiConfig: data.xai_config,
+    openaiConfig: data.openai_config,
+  };
+
   await generateAndTweet(
     getRandomItem(data.prompt),
     getRandomItem(data.news_prompt),
-    data.news_handles
+    data.news_handles,
+    config
   );
 
   tweetCounter.decrementRemaining();
