@@ -1,3 +1,5 @@
+import { ModelType } from "../services/gpt";
+
 export interface IRegisterAirdropBody {
   tweetId: string;
   limit: number;
@@ -21,6 +23,11 @@ export interface IHotProfileBody {
   prompt: string;
 }
 
+export interface AIConfig {
+  api_key: string;
+  from_env_file: boolean;
+}
+
 export interface ITweetBody {
   tools_catch_phrase: string; // catch phrase which will enable tools like sendai, launch ai agent etc
   metadata: {
@@ -42,6 +49,9 @@ export interface ITweetBody {
   hotprofiles_prompt: string;
   replies_prompt: string;
   hotprofiles: [IHotProfileBody];
+  model?: ModelType;
+  xai_config?: AIConfig;
+  openai_config?: AIConfig;
 }
 
 export interface IMentionBody {
